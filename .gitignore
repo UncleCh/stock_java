@@ -1,0 +1,35 @@
+# Compiled source #
+###################
+*.class
+
+
+
+# Packages #
+############
+*.jar
+
+
+# Logs and databases #
+######################
+*.log
+
+
+# Build output directies
+target/
+build/
+
+# IntelliJ specific files/directories
+out
+.idea
+*.ipr
+*.iws
+*.iml
+atlassian-ide-plugin.xml
+
+# Eclipse specific files/directories
+.classpath
+.project
+.settings
+.metadata
+bin/
+
