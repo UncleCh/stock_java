@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class StockAnalysis {
     // 412
-    public Map<String,Object> calContinueGrowth(int period,List<Stock> stocks){
-
+    public Map<String, Object> calContinueGrowth(int period, List<Stock> stocks) {
+        return null;
     }
 }
