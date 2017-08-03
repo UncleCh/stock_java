@@ -24,4 +24,7 @@ public interface StockConfig extends Config {
 
     @Key("use_agent")
     String useAgent();
+
+    @Key("default_percent")
+    String defaultPercent();
 }

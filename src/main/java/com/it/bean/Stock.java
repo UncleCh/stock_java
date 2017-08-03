@@ -1,6 +1,7 @@
 package com.it.bean;
 
 
+import com.google.common.base.MoreObjects;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -138,8 +139,13 @@ public class Stock {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Stock)
-            return ((Stock) obj).getDate().equals(getDate());
-        return false;
+        return obj instanceof Stock && ((Stock) obj).getDate().equals(getDate());
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("date", date)
+                .add("inc_percent", inc_percent).toString();
     }
 }
