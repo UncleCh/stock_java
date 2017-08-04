@@ -2,74 +2,67 @@ package com.it.service;
 
 
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.it.bean.SelectStrategyType;
 import com.it.bean.Stock;
-import com.it.util.StockConfig;
-import org.aeonbits.owner.ConfigFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.DoublePredicate;
 
 @Service
 public class StockAnalysis {
-    // 412
-    private Map<Integer, List<LinkedList<Stock>>> calContinueGrowthByPeriod(int period, List<Stock> stocks) {
-        StockConfig stockConfig = ConfigFactory.create(StockConfig.class);
+    @Autowired
+    private SelectStrategyManager strategyManager;
+
+    public Map<Integer, List<LinkedList<Stock>>> calContinueGrowthByPeriod(int period, SelectStrategyType strategyType, List<Stock> stocks) {
         Map<Integer, List<LinkedList<Stock>>> result = Maps.newHashMap();
-        int endPosition, curPeriodIndex = 1;
+        int endPosition, startPostion = 0, curPeriodIndex = 1;
         if (stocks.size() < period)
             endPosition = stocks.size();
         else
             endPosition = period;
         while (endPosition <= stocks.size()) {
-            calContinueGrowth(curPeriodIndex, stocks, stockConfig, result);
+            SelectStrategy selectStrategy = strategyManager.getSelectStrategy(strategyType);
+            result.put(curPeriodIndex, selectStrategy.calContinueGrowth(curPeriodIndex, new ArrayList<>(stocks.subList(startPostion, endPosition))));
             curPeriodIndex++;
-            if (stocks.size() < endPosition + period)
-                endPosition += stocks.size();
-            else
+            startPostion = endPosition;
+            if (stocks.size() < endPosition + period) {
+                if (stocks.size() - endPosition == 0)
+                    break;
+                endPosition += stocks.size() - endPosition;
+
+            } else
                 endPosition += period;
         }
         return result;
     }
 
-    private void calContinueGrowth(int curPeriodIndex, List<Stock> stocks, StockConfig stockConfig, Map<Integer, List<LinkedList<Stock>>> result) {
-        List<LinkedList<Stock>> periodResult = Lists.newArrayList();
-        LinkedList<Stock> continueGrowth = null;
-        for (Stock stock : stocks) {
-            if (stock.getInc_percent() > 0) {
-                if (continueGrowth == null)
-                    continueGrowth = Lists.newLinkedList();
-                continueGrowth.add(stock);
-            } else {
-                if (continueGrowth != null && (continueGrowth.size() > 1 || continueGrowth.getFirst().getInc_percent() > Integer.parseInt(stockConfig.defaultPercent()))) {
-                    periodResult.add(continueGrowth);
-                } else {
-                    continueGrowth = null;
-                }
-            }
-        }
-        result.put(curPeriodIndex, periodResult);
-    }
 
-    public Map<Integer, List<ContinueStockDesc>> getStockDataByContinuePercent(int period, double percent, List<Stock> stocks) {
-        Map<Integer, List<LinkedList<Stock>>> periodResult = calContinueGrowthByPeriod(period, stocks);
+    public Map<Integer, List<ContinueStockDesc>> getStockDataByContinuePercent(int period, DoublePredicate predicate, SelectStrategyType strategyType, List<Stock> stocks) {
+        Map<Integer, List<LinkedList<Stock>>> periodResult = calContinueGrowthByPeriod(period, strategyType, stocks);
         if (periodResult.size() == 0)
             return Maps.newHashMap();
         Map<Integer, List<ContinueStockDesc>> result = Maps.newHashMap();
         for (Map.Entry<Integer, List<LinkedList<Stock>>> entry : periodResult.entrySet()) {
-            int tempContinueIncrePercent = 0;
+            double tempContinueIncrePercent = 0;
             List<LinkedList<Stock>> curLinkedList = entry.getValue();
             List<ContinueStockDesc> periodLists = Lists.newArrayList();
             for (LinkedList<Stock> stock : curLinkedList) {
                 for (Stock continuStock : stock) {
                     tempContinueIncrePercent += continuStock.getInc_percent();
                 }
-                if (tempContinueIncrePercent > percent) {
+                if (predicate.test(tempContinueIncrePercent)) {
                     ContinueStockDesc continueStockDesc = new ContinueStockDesc(tempContinueIncrePercent, stock.getFirst().getDate(), stock.getLast().getDate());
                     periodLists.add(continueStockDesc);
                 }
-
+                tempContinueIncrePercent = 0;
             }
             result.put(entry.getKey(), periodLists);
         }
@@ -82,7 +75,7 @@ public class StockAnalysis {
         private String endDate;
 
 
-        public ContinueStockDesc(double percent, String startDate, String endDate) {
+        private ContinueStockDesc(double percent, String startDate, String endDate) {
             this.percent = percent;
             this.startDate = startDate;
             this.endDate = endDate;
