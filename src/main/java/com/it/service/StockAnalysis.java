@@ -73,7 +73,7 @@ public class StockAnalysis {
         Map<Integer, Object> objectObjectHashMap = Maps.newHashMap();
         for (Map.Entry<Integer, List<ContinueStockDesc>> entry : continueMap.entrySet()) {
             for (ContinueStockDesc stockDesc : entry.getValue()) {
-                
+
             }
         }
     }
