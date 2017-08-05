@@ -1,23 +1,20 @@
 package com.it.service;
 
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.it.bean.ContinueStockDesc;
 import com.it.bean.SelectStrategyType;
 import com.it.bean.Stock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.DoublePredicate;
 
 @Service
 public class StockAnalysis {
+
     @Autowired
     private SelectStrategyManager strategyManager;
 
@@ -69,48 +66,15 @@ public class StockAnalysis {
         return result;
     }
 
-    public class ContinueStockDesc {
-        private double percent;
-        private String startDate;
-        private String endDate;
 
-
-        private ContinueStockDesc(double percent, String startDate, String endDate) {
-            this.percent = percent;
-            this.startDate = startDate;
-            this.endDate = endDate;
-        }
-
-        public double getPercent() {
-
-            return percent;
-        }
-
-        public void setPercent(double percent) {
-            this.percent = percent;
-        }
-
-        public String getStartDate() {
-            return startDate;
-        }
-
-        public void setStartDate(String startDate) {
-            this.startDate = startDate;
-        }
-
-        public String getEndDate() {
-            return endDate;
-        }
-
-        public void setEndDate(String endDate) {
-            this.endDate = endDate;
-        }
-
-        @Override
-        public String toString() {
-            return MoreObjects.toStringHelper(this).add("percent", percent)
-                    .add("startDate", startDate)
-                    .add("endDate", endDate).toString();
+    public Map<Integer, Double> calPeriodAvgPrice(Map<Integer, List<ContinueStockDesc>> continueMap) {
+        if (continueMap.size() < 2)
+            throw new RuntimeException("无效的数据");
+        Map<Integer, Object> objectObjectHashMap = Maps.newHashMap();
+        for (Map.Entry<Integer, List<ContinueStockDesc>> entry : continueMap.entrySet()) {
+            for (ContinueStockDesc stockDesc : entry.getValue()) {
+                
+            }
         }
     }
 }
