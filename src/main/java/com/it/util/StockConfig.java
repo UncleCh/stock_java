@@ -2,6 +2,7 @@ package com.it.util;
 
 
 import org.aeonbits.owner.Config;
+import org.aeonbits.owner.ConfigFactory;
 
 @Config.Sources({"classpath:StockConfig.properties"})
 public interface StockConfig extends Config {
@@ -27,4 +28,8 @@ public interface StockConfig extends Config {
 
     @Key("default_percent")
     String defaultPercent();
+
+    static StockConfig getConfig(){
+        return ConfigFactory.create(StockConfig.class);
+    }
 }
