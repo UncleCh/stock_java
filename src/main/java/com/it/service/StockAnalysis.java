@@ -103,9 +103,7 @@ public class StockAnalysis {
         Stock temp = null;
         for (Stock stock : stocks) {
             maxSum = Math.max(stock.getMax_price(), maxSum);
-            temp = stock;
         }
-        System.out.println(temp);
         return maxSum;
     }
 

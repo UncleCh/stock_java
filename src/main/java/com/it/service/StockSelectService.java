@@ -8,6 +8,7 @@ import com.it.bean.SelectStrategyType;
 import com.it.bean.Stock;
 import com.it.repository.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
@@ -32,10 +33,11 @@ public class StockSelectService {
         this.stockAnalysis = stockAnalysis;
     }
 
-    public AnalysisStock selectStockByPeriod(List<ContinueStockDesc> curPeriod) {
-        int period = 412;
+    public AnalysisStock analysisiStockByPeriod(int period, int stockCode, List<ContinueStockDesc> curPeriod) {
         Sort sort = new Sort(Sort.Direction.ASC, "date");
-        List<Stock> stocks = stockRepository.findAll(sort);
+        Stock stock = new Stock();
+        stock.setCode(stockCode);
+        List<Stock> stocks = stockRepository.findAll(Example.of(stock),sort);
         Map<Integer, List<ContinueStockDesc>> fallResult = stockAnalysis.getStockDataByContinuePercent(period, value -> value < -0.06, SelectStrategyType.CONTINUE_FALL_MAX, stocks);
         List<ContinueStockDesc> curPeriodStock = fallResult.get(fallResult.size());
         curPeriodStock.addAll(curPeriod);
@@ -48,12 +50,12 @@ public class StockSelectService {
         prices.add(recentStock.getClose_price());
         prices.sort(Double::compare);
         double i = prices.indexOf(recentStock.getClose_price());
-        Map<Integer, List<ContinueStockDesc>> maxPrice = stockAnalysis.getStockDataByContinuePercent(period, value -> value > 0.1, SelectStrategyType.CONTINUE_GROWTH_MAX, stocks);
-        double curPeriodMaxPrice = maxPrice.get(maxPrice.size() - 1).get(0).getAvgPrice();
-        AnalysisStock analysisStock = new AnalysisStock(curPeriodStock.size(), i / prices.size(), curPeriodMaxPrice);
-        for (Map.Entry<Integer, List<ContinueStockDesc>> entry : maxPrice.entrySet()) {
-            analysisStock.addPrice(entry.getValue().get(0).getAvgPrice());
+        Map<Integer, Double> curPeriodMaxPrice = stockAnalysis.getMaxPrice(period, stocks);
+        AnalysisStock analysisStock = new AnalysisStock(curPeriodStock.size(), i / prices.size(), curPeriodMaxPrice.get(curPeriodMaxPrice.size()));
+        for (Map.Entry<Integer, Double> entry : curPeriodMaxPrice.entrySet()) {
+            analysisStock.addPrice(entry.getValue());
         }
+        analysisStock.setStartDate(stocks.get(0).getDate());
         return analysisStock;
     }
 }

@@ -13,8 +13,8 @@ public interface StockConfig extends Config {
     @Key("ali_stock_host")
     String stockHost();
 
-    @Key("stock_history_path")
-    String stockHistoryPath();
+    @Key("stock_list")
+    String stockList();
 
     @Key("history_stock_path")
     String historyStockUrl();

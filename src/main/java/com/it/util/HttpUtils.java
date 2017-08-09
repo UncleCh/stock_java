@@ -312,7 +312,7 @@ public class HttpUtils {
     }
 
 
-    public String getResult(HttpResponse response) {
+    public static String getResult(HttpResponse response) {
         try {
             return EntityUtils.toString(response.getEntity());
         } catch (IOException e) {

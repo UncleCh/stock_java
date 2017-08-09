@@ -16,14 +16,32 @@ import us.codecraft.webmagic.processor.PageProcessor;
 
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PagerProcess implements PageProcessor {
 
     private Site site = Site.me().setRetryTimes(3).setSleepTime(1000);
     private static Logger logger = LoggerFactory.getLogger(PagerProcess.class);
+    private StockCollector stockCollector;
+    private static AtomicBoolean isAdd = new AtomicBoolean(false);
 
+    public PagerProcess(StockCollector stockCollector) {
+        this.stockCollector = Objects.requireNonNull(stockCollector);
+    }
 
     public void process(Page page) {
+        if (!isAdd.get()) {
+            synchronized (isAdd) {
+                if (!isAdd.get()) {
+                    Set<String> stockList = stockCollector.getStockList();
+                    for (String stockCode : stockList) {
+                        page.addTargetRequest(StockConfig.getConfig().historyStockUrl().concat(stockCode));
+                    }
+                }
+            }
+        }
         Document doc = page.getHtml().getDocument();
         StockConfig stockConfig = ConfigFactory.create(StockConfig.class);
         String stockCode = stockConfig.stockCodeList();

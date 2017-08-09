@@ -14,7 +14,8 @@ public class StockApplication implements CommandLineRunner {
     private StockCollector stockCollector;
 
     public void run(String... strings) throws Exception {
-//        stockCollector.initHistoryStock();
+        stockCollector.initHistoryStock();
+//        stockCollector.initStockList(1,"sz");
 
     }
 
