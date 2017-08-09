@@ -44,7 +44,6 @@ public class PagerProcess implements PageProcessor {
         }
         Document doc = page.getHtml().getDocument();
         StockConfig stockConfig = ConfigFactory.create(StockConfig.class);
-        String stockCode = stockConfig.stockCodeList();
         List<Stock> results = Lists.newArrayList();
         getStockDataBySpider(stockCode, doc, results);
         page.putField("data", results);
