@@ -4,22 +4,28 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Sets;
 import com.it.bean.StockBasicInfo;
+import com.it.bean.StockPeriod;
 import com.it.repository.StockRepository;
 import com.it.util.HttpUtils;
 import com.it.util.StockConfig;
+import com.mongodb.WriteResult;
+import com.mongodb.client.MongoCollection;
 import org.aeonbits.owner.ConfigFactory;
 import org.apache.http.HttpResponse;
+import org.bson.Document;
+import org.bson.codecs.DocumentCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import us.codecraft.webmagic.Spider;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Predicate;
 
 @Service
 public class StockCollector {
@@ -81,12 +87,42 @@ public class StockCollector {
         }
     }
 
-    public Set<String> getStockList() {
+    public void mergeStockData() {
+        List<StockPeriod> stockPeriods = mongoTemplate.findAll(StockPeriod.class);
+        stockPeriods.forEach(stockPeriod -> {
+            Query query = new Query();
+            String stockCode = (int) stockPeriod.getCode() + "";
+            if (stockCode.length() < 6) {
+                stockCode = String.format("%06d", (int) stockPeriod.getCode());
+            }
+            query.addCriteria(Criteria.where("code").is(stockCode));
+            Update update = new Update().set("period", stockPeriod.getPeriod());
+            WriteResult writeResult = mongoTemplate.updateFirst(query, update, StockBasicInfo.class);
+            logger.info("update stock num:{} stockCode:{}", writeResult.getN(), stockCode);
+        });
+
+    }
+
+    public Set<String> getStockList(Predicate<StockBasicInfo> condition) {
         Set<String> codes = Sets.newHashSet();
         List<StockBasicInfo> all = mongoTemplate.findAll(StockBasicInfo.class);
-        all.forEach(stockBasicInfo -> codes.add(stockBasicInfo.getCode()));
+//        all = new ArrayList<>(all.subList(0, 10));
+        all.stream().filter(condition).forEach(stockBasicInfo -> codes.add(stockBasicInfo.getCode()));
         return codes;
     }
+
+    public Set<StockBasicInfo> getStockSet(Predicate<StockBasicInfo> condition) {
+        Set<StockBasicInfo> codes = Sets.newHashSet();
+        List<StockBasicInfo> all = mongoTemplate.findAll(StockBasicInfo.class);
+        all.stream().filter(condition).forEach(stockBasicInfo -> codes.add(stockBasicInfo));
+        return codes;
+    }
+
+    public Set<String> getStockList() {
+        return getStockList(stockBasicInfo -> true);
+    }
+
+
 
 
 }

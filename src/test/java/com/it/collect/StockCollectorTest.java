@@ -19,4 +19,9 @@ public class StockCollectorTest extends BaseStockTest {
         System.out.println(stockList);
     }
 
+    @Test
+    public void testMergeStockData(){
+        stockCollector.mergeStockData();
+    }
+
 }

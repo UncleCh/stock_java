@@ -75,16 +75,17 @@ public class StockAnalysis {
         return result;
     }
 
-    public Map<Integer, Double> getMaxPrice(int period, List<Stock> stocks) {
+    public Map<Integer, Stock> getMaxPrice(int period, List<Stock> stocks) {
 
-        Map<Integer, Double> result = Maps.newHashMap();
+        Map<Integer, Stock> result = Maps.newHashMap();
         int endPosition, startPostion = 0, curPeriodIndex = 1;
         if (stocks.size() < period)
             endPosition = stocks.size();
         else
             endPosition = period;
         while (endPosition <= stocks.size()) {
-            result.put(curPeriodIndex, findMaxValue(new ArrayList<>(stocks.subList(startPostion, endPosition))));
+            Stock maxStock = findMaxValue(new ArrayList<>(stocks.subList(startPostion, endPosition)));
+            result.put(curPeriodIndex, maxStock);
             curPeriodIndex++;
             startPostion = endPosition;
             if (stocks.size() < endPosition + period) {
@@ -98,13 +99,13 @@ public class StockAnalysis {
         return result;
     }
 
-    private double findMaxValue(List<Stock> stocks) {
-        double maxSum = 0;
-        Stock temp = null;
+    private Stock findMaxValue(List<Stock> stocks) {
+        Stock maxStock = new Stock();
         for (Stock stock : stocks) {
-            maxSum = Math.max(stock.getMax_price(), maxSum);
+           if (stock.getMax_price() > maxStock.getMax_price())
+               maxStock = stock;
         }
-        return maxSum;
+        return maxStock;
     }
 
 }

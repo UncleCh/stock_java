@@ -24,12 +24,22 @@ public class StockBasicInfo {
     private String mgjzc;
     private String pinyin;
 
+    private int period;
+
     public ObjectId getId() {
         return id;
     }
 
     public void setId(ObjectId id) {
         this.id = id;
+    }
+
+    public int getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(int period) {
+        this.period = period;
     }
 
     public String getMarket() {
@@ -73,6 +83,8 @@ public class StockBasicInfo {
     }
 
     public String getCode() {
+        if (code.length() < 6)
+            return String.format("%06s", code);
         return code;
     }
 

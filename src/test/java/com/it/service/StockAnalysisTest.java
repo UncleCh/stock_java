@@ -1,27 +1,32 @@
 package com.it.service;
 
 
-import com.it.bean.ContinueStockDesc;
-import com.it.bean.SelectStrategyType;
-import com.it.bean.Stock;
+import com.it.bean.*;
+import com.it.collect.StockCollector;
+import com.it.repository.AnalysisRepository;
 import com.it.repository.StockRepository;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
-public class StockAnalysisTest extends BaseStockTest{
+public class StockAnalysisTest extends BaseStockTest {
 
     @Autowired
     StockAnalysis stockAnalysis;
-
+    @Autowired
+    StockCollector stockCollector;
+    @Autowired
+    AnalysisRepository analysisRepository;
+    @Autowired
+    StockRepository stockRepository;
+    @Autowired
+    private StockSelectService selectService;
 
     @Test
     public void testGetStockDataByContinuePercent() {
@@ -41,9 +46,22 @@ public class StockAnalysisTest extends BaseStockTest{
     }
 
     @Test
-    public void testGetMaxPrice(){
-        Map<Integer, Double> maxPrice = stockAnalysis.getMaxPrice(period, stocks);
+    public void testGetMaxPrice() {
+        Map<Integer, Stock> maxPrice = stockAnalysis.getMaxPrice(period, stocks);
         System.out.println(maxPrice);
+    }
+
+
+    @Test
+    public void testAnalysis() {
+        Set<StockBasicInfo> stockSet = stockCollector.getStockSet(stockBasicInfo -> stockBasicInfo.getPeriod() != 0);
+        for (StockBasicInfo stock : stockSet) {
+            Map<Integer, List<ContinueStockDesc>> result = stockAnalysis.getStockDataByContinuePercent(period, value -> value > 0.1, SelectStrategyType.CONTINUE_GROWTH, stocks);
+            List<ContinueStockDesc> continueStockDescs = result.get(result.size());
+            AnalysisStock analysisStock = selectService.analysisiStockByPeriod(stock.getPeriod(), Integer.parseInt(stock.getCode()), continueStockDescs);
+            analysisStock.setGrowthMap(result);
+            AnalysisStock insert = analysisRepository.insert(analysisStock);
+        }
     }
 
 }

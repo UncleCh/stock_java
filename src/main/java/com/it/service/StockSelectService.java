@@ -34,27 +34,28 @@ public class StockSelectService {
     }
 
     public AnalysisStock analysisiStockByPeriod(int period, int stockCode, List<ContinueStockDesc> curPeriod) {
-        Sort sort = new Sort(Sort.Direction.ASC, "date");
-        Stock stock = new Stock();
-        stock.setCode(stockCode);
-        List<Stock> stocks = stockRepository.findAll(Example.of(stock),sort);
+        List<Stock> stocks = stockRepository.findByCodeOrderByDateAsc(Double.parseDouble(stockCode+""));
+        if (stocks.size() == 0)
+            throw new RuntimeException("数据异常:" + stockCode);
         Map<Integer, List<ContinueStockDesc>> fallResult = stockAnalysis.getStockDataByContinuePercent(period, value -> value < -0.06, SelectStrategyType.CONTINUE_FALL_MAX, stocks);
         List<ContinueStockDesc> curPeriodStock = fallResult.get(fallResult.size());
         curPeriodStock.addAll(curPeriod);
         ArrayList<Double> prices = Lists.newArrayList();
         curPeriodStock.forEach(continueStockDesc -> prices.add(continueStockDesc.getAvgPrice()));
         Query query = new Query();
-        sort = new Sort(Sort.Direction.DESC, "date");
+        Sort sort = new Sort(Sort.Direction.DESC, "date");
         query = query.with(sort).limit(1);
         Stock recentStock = mongoTemplate.findOne(query, Stock.class);
         prices.add(recentStock.getClose_price());
         prices.sort(Double::compare);
         double i = prices.indexOf(recentStock.getClose_price());
-        Map<Integer, Double> curPeriodMaxPrice = stockAnalysis.getMaxPrice(period, stocks);
-        AnalysisStock analysisStock = new AnalysisStock(curPeriodStock.size(), i / prices.size(), curPeriodMaxPrice.get(curPeriodMaxPrice.size()));
-        for (Map.Entry<Integer, Double> entry : curPeriodMaxPrice.entrySet()) {
+        Map<Integer, Stock> curPeriodMaxPrice = stockAnalysis.getMaxPrice(period, stocks);
+        AnalysisStock analysisStock = new AnalysisStock(curPeriodStock.size(), i / prices.size(), curPeriodMaxPrice.get(curPeriodMaxPrice.size()).getMax_price());
+        analysisStock.setFallMap(fallResult);
+        for (Map.Entry<Integer, Stock> entry : curPeriodMaxPrice.entrySet()) {
             analysisStock.addPrice(entry.getValue());
         }
+        analysisStock.setCode(stockCode+"");
         analysisStock.setStartDate(stocks.get(0).getDate());
         return analysisStock;
     }

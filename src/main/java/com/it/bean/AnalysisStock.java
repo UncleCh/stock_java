@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 分析模型
@@ -16,14 +17,19 @@ public class AnalysisStock {
 
     @Id
     private ObjectId id;
-    // 振幅次数
+    //  当前周期 振幅次数
     private int amplitudeCount;
     // 当前价格，百分比
     private double curPricePercent;
 
     private double curPeriodMaxPrice;
+    private String code;
 
-    private List<Double> maxPriceList = new LinkedList<>();
+    private Map<Integer, List<ContinueStockDesc>> growthMap;
+
+    private Map<Integer, List<ContinueStockDesc>> fallMap;
+
+    private List<Stock> maxPriceList = new LinkedList<>();
 
     private String startDate;
 
@@ -46,11 +52,11 @@ public class AnalysisStock {
         return curPeriodMaxPrice;
     }
 
-    public List<Double> getMaxPriceList() {
+    public List<Stock> getMaxPriceList() {
         return maxPriceList;
     }
 
-    public void addPrice(double maxPrice) {
+    public void addPrice(Stock maxPrice) {
         maxPriceList.add(maxPrice);
     }
 
@@ -68,6 +74,30 @@ public class AnalysisStock {
 
     public void setStartDate(String startDate) {
         this.startDate = startDate;
+    }
+
+    public Map<Integer, List<ContinueStockDesc>> getGrowthMap() {
+        return growthMap;
+    }
+
+    public void setGrowthMap(Map<Integer, List<ContinueStockDesc>> growthMap) {
+        this.growthMap = growthMap;
+    }
+
+    public Map<Integer, List<ContinueStockDesc>> getFallMap() {
+        return fallMap;
+    }
+
+    public void setFallMap(Map<Integer, List<ContinueStockDesc>> fallMap) {
+        this.fallMap = fallMap;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     @Override
