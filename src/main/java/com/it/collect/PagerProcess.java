@@ -2,6 +2,7 @@ package com.it.collect;
 
 import com.google.common.collect.Lists;
 import com.it.bean.Stock;
+import com.it.util.Constant;
 import com.it.util.DateUtils;
 import com.it.util.StockConfig;
 import org.aeonbits.owner.ConfigFactory;
@@ -10,12 +11,16 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
 
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -25,18 +30,22 @@ public class PagerProcess implements PageProcessor {
     private Site site = Site.me().setRetryTimes(3).setSleepTime(1000);
     private static Logger logger = LoggerFactory.getLogger(PagerProcess.class);
     private StockCollector stockCollector;
+    private MongoTemplate mongoTemplate;
     private static AtomicBoolean isAdd = new AtomicBoolean(false);
 
-    public PagerProcess(StockCollector stockCollector) {
+    public PagerProcess(StockCollector stockCollector, MongoTemplate mongoTemplate) {
         this.stockCollector = Objects.requireNonNull(stockCollector);
+        this.mongoTemplate = Objects.requireNonNull(mongoTemplate);
     }
 
     public void process(Page page) {
         if (!isAdd.get()) {
             synchronized (isAdd) {
                 if (!isAdd.get()) {
-                    Set<String> stockList = stockCollector.getStockList();
+                    Set<String> stockList = stockCollector.getUnCatchStockCode();
                     for (String stockCode : stockList) {
+                        if (stockCode.length() < 6)
+                            stockCode =  String.format("%06s", stockCode);
                         page.addTargetRequest(StockConfig.getConfig().historyStockUrl().concat(stockCode));
                     }
                 }

@@ -6,6 +6,7 @@ import com.google.common.collect.Sets;
 import com.it.bean.StockBasicInfo;
 import com.it.bean.StockPeriod;
 import com.it.repository.StockRepository;
+import com.it.util.Constant;
 import com.it.util.HttpUtils;
 import com.it.util.StockConfig;
 import com.mongodb.WriteResult;
@@ -43,7 +44,7 @@ public class StockCollector {
     public void initHistoryStock() {
         StockConfig stockConfig = ConfigFactory.create(StockConfig.class);
         String stockCode = stockConfig.stockCodeList();
-        Spider.create(new PagerProcess(this)).addUrl(stockConfig.historyStockUrl() + stockCode).
+        Spider.create(new PagerProcess(this, mongoTemplate)).addUrl(stockConfig.historyStockUrl() + stockCode).
                 addPipeline(new StockPipeline(stockRepository)).thread(1).run();
     }
 
@@ -106,7 +107,7 @@ public class StockCollector {
     public Set<String> getStockList(Predicate<StockBasicInfo> condition) {
         Set<String> codes = Sets.newHashSet();
         List<StockBasicInfo> all = mongoTemplate.findAll(StockBasicInfo.class);
-//        all = new ArrayList<>(all.subList(0, 10));
+        all = new ArrayList<>(all.subList(0, 60));
         all.stream().filter(condition).forEach(stockBasicInfo -> codes.add(stockBasicInfo.getCode()));
         return codes;
     }
@@ -122,7 +123,12 @@ public class StockCollector {
         return getStockList(stockBasicInfo -> true);
     }
 
-
-
+    public Set<String> getUnCatchStockCode() {
+        Set<String> stockList = getStockList();
+        List<Map> maps = mongoTemplate.findAll(Map.class, Constant.STOCK_CONFIG);
+        List<String> codes = (List<String>) maps.get(0).get(Constant.STOCK_CATCHED);
+        stockList.removeAll(codes);
+        return stockList;
+    }
 
 }

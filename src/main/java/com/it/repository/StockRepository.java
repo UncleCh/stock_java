@@ -9,4 +9,5 @@ public interface StockRepository extends MongoRepository<Stock, Integer> {
 
     List<Stock> findByCodeOrderByDateAsc(double stockCode);
 
+
 }
