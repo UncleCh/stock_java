@@ -56,7 +56,7 @@ public class StockAnalysisTest extends BaseStockTest {
     public void testAnalysis() {
         Set<StockBasicInfo> stockSet = stockCollector.getStockSet(stockBasicInfo -> stockBasicInfo.getPeriod() != 0);
         for (StockBasicInfo stock : stockSet) {
-            Map<Integer, List<ContinueStockDesc>> result = stockAnalysis.getStockDataByContinuePercent(period, value -> value > 0.1, SelectStrategyType.CONTINUE_GROWTH, stocks);
+            Map<Integer, List<ContinueStockDesc>> result = stockAnalysis.getStockDataByContinuePercent(stock.getPeriod(), value -> value > 0.1, SelectStrategyType.CONTINUE_GROWTH, stocks);
             List<ContinueStockDesc> continueStockDescs = result.get(result.size());
             AnalysisStock analysisStock = selectService.analysisiStockByPeriod(stock.getPeriod(), Integer.parseInt(stock.getCode()), continueStockDescs);
             analysisStock.setGrowthMap(result);

@@ -25,13 +25,11 @@ public class AnalysisStock {
     private double curPeriodMaxPrice;
     private String code;
 
-    private Map<Integer, List<ContinueStockDesc>> growthMap;
-
-    private Map<Integer, List<ContinueStockDesc>> fallMap;
-
     private List<Stock> maxPriceList = new LinkedList<>();
 
     private String startDate;
+    private Map<Integer, List<ContinueStockDesc>> growthMap;
+    private Map<Integer, List<ContinueStockDesc>> fallMap;
 
 
     public AnalysisStock(int amplitudeCount, double curPricePercent, double curPeriodMaxPrice) {
