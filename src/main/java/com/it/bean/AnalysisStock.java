@@ -24,6 +24,8 @@ public class AnalysisStock {
 
     private double curPeriodMaxPrice;
     private String code;
+    //当前周期最大价格、最小价格相差百分比
+    private double curPeriodAmplitude;
 
     private List<Stock> maxPriceList = new LinkedList<>();
 
@@ -44,6 +46,14 @@ public class AnalysisStock {
 
     public void setId(ObjectId id) {
         this.id = id;
+    }
+
+    public double getCurPeriodAmplitude() {
+        return curPeriodAmplitude;
+    }
+
+    public void setCurPeriodAmplitude(double curPeriodAmplitude) {
+        this.curPeriodAmplitude = curPeriodAmplitude;
     }
 
     public double getCurPeriodMaxPrice() {

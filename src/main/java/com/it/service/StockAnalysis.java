@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.DoublePredicate;
+import java.util.function.Function;
 
 @Service
 public class StockAnalysis {
@@ -76,6 +77,28 @@ public class StockAnalysis {
     }
 
     public Map<Integer, Stock> getMaxPrice(int period, List<Stock> stocks) {
+        return getStockByOperator(period, stocks, stocks1 -> {
+            Stock maxStock = new Stock();
+            for (Stock stock : stocks1) {
+                if (stock.getMax_price() > maxStock.getMax_price())
+                    maxStock = stock;
+            }
+            return maxStock;
+        });
+    }
+
+    public Map<Integer, Stock> getMinPrice(int period, List<Stock> stocks) {
+        return getStockByOperator(period, stocks, stocks1 -> {
+            Stock minStock = new Stock();
+            for (Stock stock : stocks1) {
+                if (stock.getMin_price() > minStock.getMin_price())
+                    minStock = stock;
+            }
+            return minStock;
+        });
+    }
+
+    public Map<Integer, Stock> getStockByOperator(int period, List<Stock> stocks, Function<List<Stock>, Stock> function) {
 
         Map<Integer, Stock> result = Maps.newHashMap();
         int endPosition, startPostion = 0, curPeriodIndex = 1;
@@ -84,7 +107,7 @@ public class StockAnalysis {
         else
             endPosition = period;
         while (endPosition <= stocks.size()) {
-            Stock maxStock = findMaxValue(new ArrayList<>(stocks.subList(startPostion, endPosition)));
+            Stock maxStock = function.apply(new ArrayList<>(stocks.subList(startPostion, endPosition)));
             result.put(curPeriodIndex, maxStock);
             curPeriodIndex++;
             startPostion = endPosition;
@@ -99,13 +122,5 @@ public class StockAnalysis {
         return result;
     }
 
-    private Stock findMaxValue(List<Stock> stocks) {
-        Stock maxStock = new Stock();
-        for (Stock stock : stocks) {
-           if (stock.getMax_price() > maxStock.getMax_price())
-               maxStock = stock;
-        }
-        return maxStock;
-    }
 
 }

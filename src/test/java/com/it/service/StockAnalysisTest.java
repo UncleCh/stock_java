@@ -8,7 +8,6 @@ import com.it.repository.StockRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Map;

@@ -2,6 +2,7 @@ package com.it.collect;
 
 import com.google.common.collect.Lists;
 import com.it.bean.Stock;
+import com.it.bean.StockBasicInfo;
 import com.it.util.Constant;
 import com.it.util.DateUtils;
 import com.it.util.StockConfig;
@@ -24,6 +25,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class PagerProcess implements PageProcessor {
 
@@ -31,6 +33,8 @@ public class PagerProcess implements PageProcessor {
     private static Logger logger = LoggerFactory.getLogger(PagerProcess.class);
     private StockCollector stockCollector;
     private MongoTemplate mongoTemplate;
+    private Set<StockBasicInfo> stockList;
+    private AtomicInteger count = new AtomicInteger(0);
     private static AtomicBoolean isAdd = new AtomicBoolean(false);
 
     public PagerProcess(StockCollector stockCollector, MongoTemplate mongoTemplate) {
@@ -42,11 +46,11 @@ public class PagerProcess implements PageProcessor {
         if (!isAdd.get()) {
             synchronized (isAdd) {
                 if (!isAdd.get()) {
-                    Set<String> stockList = stockCollector.getUnCatchStockCode();
-                    for (String stockCode : stockList) {
-                        if (stockCode.length() < 6)
-                            stockCode =  String.format("%06s", stockCode);
-                        page.addTargetRequest(StockConfig.getConfig().historyStockUrl().concat(stockCode));
+                    stockList = stockCollector.getUnCatchStockCode();
+                    for (StockBasicInfo stockCode : stockList) {
+                        if (stockCode.getCode().length() < 6)
+                            stockCode.setCode(String.format("%06s", stockCode.getCode()));
+                        page.addTargetRequest(StockConfig.getConfig().historyStockUrl().concat(stockCode.getCode()));
                     }
                 }
             }
@@ -54,8 +58,12 @@ public class PagerProcess implements PageProcessor {
         Document doc = page.getHtml().getDocument();
         String stockCode = page.getRequest().getUrl().split("=")[1];
         List<Stock> results = Lists.newArrayList();
+        int catchedSize = count.incrementAndGet();
         getStockDataBySpider(stockCode, doc, results);
+        if(catchedSize  > stockList.size())
+            stockCollector.initCatchedStock();
         page.putField("data", results);
+
     }
 
     private void getStockDataBySpider(String stockCode, Document doc, final List<Stock> results) {

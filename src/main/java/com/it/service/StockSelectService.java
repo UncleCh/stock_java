@@ -8,14 +8,12 @@ import com.it.bean.SelectStrategyType;
 import com.it.bean.Stock;
 import com.it.repository.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +53,11 @@ public class StockSelectService {
         for (Map.Entry<Integer, Stock> entry : curPeriodMaxPrice.entrySet()) {
             analysisStock.addPrice(entry.getValue());
         }
+        Map<Integer, Stock> minPrice = stockAnalysis.getMinPrice(period, stocks);
+        Stock minStock = minPrice.get(minPrice.size());
+        Stock maxStock = curPeriodMaxPrice.get(curPeriodMaxPrice.size());
+        double curPeriodAmplitude = (maxStock.getMax_price() - minStock.getMin_price()) / minStock.getMin_price();
+        analysisStock.setCurPeriodAmplitude(curPeriodAmplitude);
         analysisStock.setCode(stockCode+"");
         analysisStock.setStartDate(stocks.get(0).getDate());
         return analysisStock;

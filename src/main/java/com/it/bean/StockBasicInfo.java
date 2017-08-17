@@ -115,4 +115,5 @@ public class StockBasicInfo {
     public void setPinyin(String pinyin) {
         this.pinyin = pinyin;
     }
+
 }
