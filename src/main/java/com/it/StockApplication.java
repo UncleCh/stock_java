@@ -6,6 +6,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.concurrent.ThreadPoolExecutor;
+
 @SpringBootApplication
 public class StockApplication implements CommandLineRunner {
 
@@ -14,7 +16,8 @@ public class StockApplication implements CommandLineRunner {
     private StockCollector stockCollector;
 
     public void run(String... strings) throws Exception {
-//        stockCollector.initHistoryStock();
+        ThreadPoolExecutor
+        stockCollector.initHistoryStock();
 //        stockCollector.initStockList(1,"sz");
 //        stockCollector.initStockList(1,"sh");
 
