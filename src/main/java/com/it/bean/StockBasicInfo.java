@@ -25,6 +25,8 @@ public class StockBasicInfo {
     private String pinyin;
 
     private int period;
+    //总市值
+    private double totalPrice;
 
     public ObjectId getId() {
         return id;
@@ -116,4 +118,11 @@ public class StockBasicInfo {
         this.pinyin = pinyin;
     }
 
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
 }

@@ -117,7 +117,7 @@ public class StockCollector {
     public Set<StockBasicInfo> getStockList(Predicate<StockBasicInfo> condition) {
         Set<StockBasicInfo> codes = Sets.newHashSet();
         List<StockBasicInfo> all = mongoTemplate.findAll(StockBasicInfo.class);
-        all = new ArrayList<>(all.subList(0, 3));
+//        all = new ArrayList<>(all.subList(0, 3));
         all.stream().filter(condition).forEach(stockBasicInfo -> codes.add(stockBasicInfo));
         return codes;
     }
@@ -160,24 +160,31 @@ public class StockCollector {
         return stockList;
     }
 
-    //去除垃圾股
+    //去除垃圾股,更新股票列表
     public Map<String, Set<StockBasicInfo>> getConditionStockList() {
         Set<StockBasicInfo> stockList = getStockList();
         Set<StockBasicInfo> garbageList = Sets.newHashSet();
         Set<StockBasicInfo> needList = Sets.newHashSet();
-
+        Set<StockBasicInfo> needUpdateList = Sets.newHashSet();
         for (StockBasicInfo basicInfo : stockList) {
             double stockClosePrice = getStockClosePrice(basicInfo.getCode(), 1, null);
-            if (stockClosePrice * Double.parseDouble(basicInfo.getTotalcapital()) < Constant.GARBAGE_PRICE) {
+            double totalPrice = stockClosePrice * Double.parseDouble(StringUtils.defaultIfEmpty(basicInfo.getTotalcapital(),"0"));
+            if (totalPrice < Constant.GARBAGE_PRICE) {
                 garbageList.add(basicInfo);
                 logger.info("垃圾股: {}", basicInfo.getCode());
             } else {
                 needList.add(basicInfo);
             }
+            if (basicInfo.getTotalPrice() != 0) {
+                basicInfo.setTotalPrice(totalPrice);
+                needUpdateList.add(basicInfo);
+            }
         }
         Map<String, Set<StockBasicInfo>> result = Maps.newHashMap();
         result.put(Constant.STOCK_NEED_CATCHED, needList);
         result.put(Constant.STOCK_GARBAGE_CATCHED, garbageList);
+        if (CollectionUtils.isNotEmpty(needUpdateList))
+            stockBasicRepository.save(needUpdateList);
         return result;
     }
 
@@ -236,7 +243,7 @@ public class StockCollector {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if (count > 3) {
+        if (count > 2) {
             return getStockClosePrice(code, ++count, stockConfig.stockHost());
         }
         return getStockClosePrice(code, ++count, null);

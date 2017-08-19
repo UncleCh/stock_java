@@ -16,7 +16,6 @@ public class StockApplication implements CommandLineRunner {
     private StockCollector stockCollector;
 
     public void run(String... strings) throws Exception {
-        ThreadPoolExecutor
         stockCollector.initHistoryStock();
 //        stockCollector.initStockList(1,"sz");
 //        stockCollector.initStockList(1,"sh");
