@@ -10,6 +10,7 @@ import com.it.repository.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,7 @@ public class StockSelectService {
         ArrayList<Double> prices = Lists.newArrayList();
         curPeriodStock.forEach(continueStockDesc -> prices.add(continueStockDesc.getAvgPrice()));
         Query query = new Query();
+        query.addCriteria(Criteria.where("code").is(stockCode));
         Sort sort = new Sort(Sort.Direction.DESC, "date");
         query = query.with(sort).limit(1);
         Stock recentStock = mongoTemplate.findOne(query, Stock.class);

@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -22,7 +21,5 @@ public abstract class BaseStockTest {
     @Before
     public void setUp() throws Exception {
 
-        Sort sort = new Sort(Sort.Direction.ASC, "date");
-        stocks = stockRepository.findAll(sort);
     }
 }

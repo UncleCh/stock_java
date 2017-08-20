@@ -19,9 +19,9 @@ public class AnalysisStock {
     private ObjectId id;
     //  当前周期 振幅次数
     private int amplitudeCount;
-    // 当前价格，百分比
-    private double curPricePercent;
-
+    // 当前价格
+    private double curPrice;
+    // position /  size  偏小 良好
     private double curPeriodMaxPrice;
     private String code;
     //当前周期最大价格、最小价格相差百分比
@@ -36,7 +36,7 @@ public class AnalysisStock {
 
     public AnalysisStock(int amplitudeCount, double curPricePercent, double curPeriodMaxPrice) {
         this.amplitudeCount = amplitudeCount;
-        this.curPricePercent = curPricePercent;
+        this.curPrice = curPricePercent;
         this.curPeriodMaxPrice = curPeriodMaxPrice;
     }
 
@@ -72,8 +72,8 @@ public class AnalysisStock {
         return amplitudeCount;
     }
 
-    public double getCurPricePercent() {
-        return curPricePercent;
+    public double getCurPrice() {
+        return curPrice;
     }
 
     public String getStartDate() {
@@ -108,11 +108,15 @@ public class AnalysisStock {
         this.code = code;
     }
 
+//    private int calGoodMarket(){
+////        com.google.common.collect.ImmutableSet.of("2005年6月6日","2008年10月28日","2012年12月4日","2013年6月25日")
+//    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("amplitudeCount", amplitudeCount)
-                .add("curPricePercent", curPricePercent)
+                .add("curPrice", curPrice)
                 .toString();
     }
 }

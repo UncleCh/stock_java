@@ -117,7 +117,7 @@ public class StockCollector {
     public Set<StockBasicInfo> getStockList(Predicate<StockBasicInfo> condition) {
         Set<StockBasicInfo> codes = Sets.newHashSet();
         List<StockBasicInfo> all = mongoTemplate.findAll(StockBasicInfo.class);
-//        all = new ArrayList<>(all.subList(0, 3));
+        all = new ArrayList<>(all.subList(0, 30));
         all.stream().filter(condition).forEach(stockBasicInfo -> codes.add(stockBasicInfo));
         return codes;
     }
@@ -168,7 +168,10 @@ public class StockCollector {
         Set<StockBasicInfo> needUpdateList = Sets.newHashSet();
         for (StockBasicInfo basicInfo : stockList) {
             double stockClosePrice = getStockClosePrice(basicInfo.getCode(), 1, null);
-            double totalPrice = stockClosePrice * Double.parseDouble(StringUtils.defaultIfEmpty(basicInfo.getTotalcapital(),"0"));
+            double totalPrice = basicInfo.getTotalPrice();
+            if (totalPrice != 0)
+                totalPrice = stockClosePrice * Double.parseDouble(StringUtils.
+                        defaultIfEmpty(basicInfo.getTotalcapital(), "0"));
             if (totalPrice < Constant.GARBAGE_PRICE) {
                 garbageList.add(basicInfo);
                 logger.info("垃圾股: {}", basicInfo.getCode());
@@ -207,11 +210,13 @@ public class StockCollector {
 
 
     private double getStockClosePrice(String code, int count, String host) {
-        if (StringUtils.isEmpty(host))
-            host = "http://stock.market.alicloudapi.com";
+        StockConfig stockConfig = StockConfig.getConfig();
+        if (StringUtils.isEmpty(host)) {
+            host = stockConfig.stockHost();
+        }
+//            host = "http://stock.market.alicloudapi.com";
         String path = "/real-stockinfo";
         String method = "GET";
-        StockConfig stockConfig = StockConfig.getConfig();
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", "APPCODE " + stockConfig.appCode());
         Map<String, String> querys = new HashMap<>();
