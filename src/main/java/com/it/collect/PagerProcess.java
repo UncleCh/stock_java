@@ -7,6 +7,9 @@ import com.it.util.Constant;
 import com.it.util.DateUtils;
 import com.it.util.StockConfig;
 import org.aeonbits.owner.ConfigFactory;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
+import org.assertj.core.util.Sets;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -20,10 +23,7 @@ import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
 
 import java.text.DecimalFormat;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -46,7 +46,16 @@ public class PagerProcess implements PageProcessor {
         if (!isAdd.get()) {
             synchronized (isAdd) {
                 if (!isAdd.get()) {
-                    stockList = stockCollector.getUnCatchStockCode();
+                    Query query = new Query();
+                    query.addCriteria(Criteria.where("key").is(Constant.STOCK_NEED_CATCHED));
+                    List<Map> maps = mongoTemplate.find(query, Map.class, Constant.STOCK_CONFIG);
+                    if (CollectionUtils.isNotEmpty(maps)) {
+                        List<StockBasicInfo> stockList = (List<StockBasicInfo>) maps.get(0).get(Constant.STOCK_NEED_CATCHED);
+                        this.stockList = Sets.newHashSet();
+                        this.stockList.addAll(stockList.subList(0,100));
+                    } else {
+                        stockList = stockCollector.getUnCatchStockCode();
+                    }
                     for (StockBasicInfo stockCode : stockList) {
                         if (stockCode.getCode().length() < 6)
                             stockCode.setCode(String.format("%06s", stockCode.getCode()));
@@ -60,7 +69,7 @@ public class PagerProcess implements PageProcessor {
         List<Stock> results = Lists.newArrayList();
         int catchedSize = count.incrementAndGet();
         getStockDataBySpider(stockCode, doc, results);
-        if(catchedSize  > stockList.size())
+        if (catchedSize > stockList.size())
             stockCollector.initCatchedStock();
         page.putField("data", results);
 

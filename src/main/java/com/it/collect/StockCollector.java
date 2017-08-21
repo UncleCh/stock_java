@@ -5,6 +5,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.it.bean.StockBasicInfo;
+import com.it.bean.StockInfo;
 import com.it.bean.StockPeriod;
 import com.it.repository.StockBasicRepository;
 import com.it.repository.StockRepository;
@@ -31,8 +32,12 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import us.codecraft.webmagic.Spider;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service
 public class StockCollector {
@@ -117,7 +122,7 @@ public class StockCollector {
     public Set<StockBasicInfo> getStockList(Predicate<StockBasicInfo> condition) {
         Set<StockBasicInfo> codes = Sets.newHashSet();
         List<StockBasicInfo> all = mongoTemplate.findAll(StockBasicInfo.class);
-        all = new ArrayList<>(all.subList(0, 30));
+//        all = new ArrayList<>(all.subList(0, 30));
         all.stream().filter(condition).forEach(stockBasicInfo -> codes.add(stockBasicInfo));
         return codes;
     }
@@ -160,25 +165,27 @@ public class StockCollector {
         return stockList;
     }
 
-    //去除垃圾股,更新股票列表
+    //根据股票列表筛选，去除垃圾股,更新股票列表
     public Map<String, Set<StockBasicInfo>> getConditionStockList() {
         Set<StockBasicInfo> stockList = getStockList();
         Set<StockBasicInfo> garbageList = Sets.newHashSet();
         Set<StockBasicInfo> needList = Sets.newHashSet();
         Set<StockBasicInfo> needUpdateList = Sets.newHashSet();
+        List<StockBasicInfo> objects = Lists.newArrayList();
+        objects.addAll(stockList);
+        List<StockInfo> stockInfo = getStockInfo(objects);
         for (StockBasicInfo basicInfo : stockList) {
-            double stockClosePrice = getStockClosePrice(basicInfo.getCode(), 1, null);
             double totalPrice = basicInfo.getTotalPrice();
-            if (totalPrice != 0)
-                totalPrice = stockClosePrice * Double.parseDouble(StringUtils.
+            if (totalPrice <= 0)
+                totalPrice = getStockClosePrice(basicInfo, stockInfo) * Double.parseDouble(StringUtils.
                         defaultIfEmpty(basicInfo.getTotalcapital(), "0"));
             if (totalPrice < Constant.GARBAGE_PRICE) {
                 garbageList.add(basicInfo);
-                logger.info("垃圾股: {}", basicInfo.getCode());
+                logger.info("垃圾股: {} 总市值:{}", basicInfo.getCode(),totalPrice);
             } else {
                 needList.add(basicInfo);
             }
-            if (basicInfo.getTotalPrice() != 0) {
+            if (basicInfo.getTotalPrice() <= 0) {
                 basicInfo.setTotalPrice(totalPrice);
                 needUpdateList.add(basicInfo);
             }
@@ -189,6 +196,13 @@ public class StockCollector {
         if (CollectionUtils.isNotEmpty(needUpdateList))
             stockBasicRepository.save(needUpdateList);
         return result;
+    }
+
+    private double getStockClosePrice(StockBasicInfo basicInfo, List<StockInfo> stockInfo) {
+        List<StockInfo> collect = stockInfo.stream().filter(stockInfo1 -> stockInfo1.getCode().equals(basicInfo.getCode())).collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(collect))
+            return Double.parseDouble(collect.get(0).getClosePrice());
+        return 0;
     }
 
     public void initCatchedStock() {
@@ -208,13 +222,78 @@ public class StockCollector {
         logger.info("更新已经完成捕获的股票代码：{}", catchCodes);
     }
 
+    /**
+     * @param stocks 股票编码 。多个股票代码间以英文逗号分隔，最多输入50个代码。
+     * @return List<StockInfo>
+     */
+    public List<StockInfo> getStockInfo(String stocks) {
+        StockConfig config = StockConfig.getConfig();
+        String host = config.stockHost();
+        String path = "batch-real-stockinfo";
+        String method = "GET";
+        String appcode = config.appCode();
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "APPCODE " + appcode);
+        Map<String, String> querys = new HashMap<>();
+        querys.put("needIndex", "0");
+        querys.put("stocks", stocks);
+        try {
+            HttpResponse response = HttpUtils.doGet(host, path, method, headers, querys);
+            String result = HttpUtils.getResult(response);
+            Map<String, Object> resultMap = JSONObject.parseObject(result, new TypeReference<Map<String, Object>>() {
+            });
+            JSONObject showapi_res_body = (JSONObject) resultMap.get("showapi_res_body");
+            return showapi_res_body.getJSONArray("list").toJavaList(StockInfo.class);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<StockInfo> collectStockInfo(List<StockBasicInfo> stockBasicInfoList) {
+        List<StockInfo> result = Lists.newArrayList();
+        int start = 0, end = 0;
+        do {
+            if (stockBasicInfoList.size() > end + 50)
+                end += 50;
+            else
+                end = end + stockBasicInfoList.size() - start;
+            String codes = stockBasicInfoList.subList(start, end).stream().map(stockBasicInfo -> stockBasicInfo.getMarket() + stockBasicInfo.getCode()).collect(Collectors.joining(","));
+            List<StockInfo> stockInfo = getStockInfo(codes);
+            mongoTemplate.insertAll(Lists.newArrayList(stockInfo));
+            result.addAll(stockInfo);
+            start = end;
+        }
+        while (end < stockBasicInfoList.size());
+        return result;
+    }
+
+
+    public List<StockInfo> getStockInfo(List<StockBasicInfo> stocks) {
+        List<StockInfo> all = mongoTemplate.findAll(StockInfo.class);
+        List<StockInfo> result = Lists.newArrayList();
+        List<StockBasicInfo> needCatch = Lists.newArrayList(stocks);
+        for (StockBasicInfo basicInfo : stocks) {
+            for (StockInfo stockInfo : all) {
+                if (stockInfo.getCode().equals(basicInfo.getCode())) {
+                    result.add(stockInfo);
+                    needCatch.remove(basicInfo);
+                }
+            }
+        }
+        if (CollectionUtils.isNotEmpty(needCatch)) {
+            List<StockInfo> stockInfoList = collectStockInfo(needCatch);
+            result.addAll(stockInfoList);
+            mongoTemplate.insertAll(stockInfoList);
+        }
+        return result;
+    }
+
 
     private double getStockClosePrice(String code, int count, String host) {
         StockConfig stockConfig = StockConfig.getConfig();
         if (StringUtils.isEmpty(host)) {
             host = stockConfig.stockHost();
         }
-//            host = "http://stock.market.alicloudapi.com";
         String path = "/real-stockinfo";
         String method = "GET";
         Map<String, String> headers = new HashMap<>();
