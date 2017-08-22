@@ -23,7 +23,7 @@ public class StockApplication implements CommandLineRunner {
 
     public void run(String... strings) throws Exception {
 
-        stockCollector.initHistoryStock();
+//        stockCollector.initHistoryStock();
 //        stockCollector.initStockList(1,"sz");
 //        stockCollector.initStockList(1,"sh");
 

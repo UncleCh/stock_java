@@ -53,18 +53,19 @@ public class StockAnalysisTest extends BaseStockTest {
 
     @Test
     public void testAnalysis() {
-        Set<StockBasicInfo> stockSet = stockCollector.getStockSet(stockBasicInfo -> stockBasicInfo.getPeriod() != 0);
-        System.out.println(stockSet.size());
-//        for (StockBasicInfo stock : stockSet) {
-            stocks = stockRepository.findByCodeOrderByDateAsc(600129);
-            Map<Integer, List<ContinueStockDesc>> result = stockAnalysis.
-                    getStockDataByContinuePercent(period, value -> value > 0.1,
-                            SelectStrategyType.CONTINUE_GROWTH, stocks);
-            List<ContinueStockDesc> continueStockDescs = result.get(result.size());
-            AnalysisStock analysisStock = selectService.analysisiStockByPeriod(period,
-                    Integer.parseInt(600129+""), continueStockDescs);
-            analysisStock.setGrowthMap(result);
-            AnalysisStock insert = analysisRepository.insert(analysisStock);
+        stockCollector.initCatchedStock();
+//        Set<StockBasicInfo> stockSet = stockCollector.getStockSet(stockBasicInfo -> stockBasicInfo.getPeriod() != 0);
+//        System.out.println(stockSet.size());
+////        for (StockBasicInfo stock : stockSet) {
+//            stocks = stockRepository.findByCodeOrderByDateAsc(600129);
+//            Map<Integer, List<ContinueStockDesc>> result = stockAnalysis.
+//                    getStockDataByContinuePercent(period, value -> value > 0.1,
+//                            SelectStrategyType.CONTINUE_GROWTH, stocks);
+//            List<ContinueStockDesc> continueStockDescs = result.get(result.size());
+//            AnalysisStock analysisStock = selectService.analysisiStockByPeriod(period,
+//                    Integer.parseInt(600129+""), continueStockDescs);
+//            analysisStock.setGrowthMap(result);
+//            AnalysisStock insert = analysisRepository.insert(analysisStock);
 //        }
     }
 
