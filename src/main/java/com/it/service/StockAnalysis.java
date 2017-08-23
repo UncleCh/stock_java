@@ -46,15 +46,15 @@ public class StockAnalysis {
     }
 
 
-    public Map<Integer, List<ContinueStockDesc>> getStockDataByContinuePercent(int period, DoublePredicate predicate, SelectStrategyType strategyType, List<Stock> stocks) {
+    public Map<Integer, LinkedList<ContinueStockDesc>> getStockDataByContinuePercent(int period, DoublePredicate predicate, SelectStrategyType strategyType, List<Stock> stocks) {
         Map<Integer, List<LinkedList<Stock>>> periodResult = calContinueGrowthByPeriod(period, strategyType, stocks);
         if (periodResult.size() == 0)
             return Maps.newHashMap();
-        Map<Integer, List<ContinueStockDesc>> result = Maps.newHashMap();
+        Map<Integer, LinkedList<ContinueStockDesc>> result = Maps.newHashMap();
         for (Map.Entry<Integer, List<LinkedList<Stock>>> entry : periodResult.entrySet()) {
             double tempContinueIncrePercent = 0, totalPrice = 0, days = 0;
             List<LinkedList<Stock>> curLinkedList = entry.getValue();
-            List<ContinueStockDesc> periodLists = Lists.newArrayList();
+            LinkedList<ContinueStockDesc> periodLists = Lists.newLinkedList();
             for (LinkedList<Stock> stock : curLinkedList) {
                 for (Stock continuStock : stock) {
                     tempContinueIncrePercent += continuStock.getInc_percent();

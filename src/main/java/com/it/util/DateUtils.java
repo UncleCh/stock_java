@@ -3,6 +3,10 @@ package com.it.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class DateUtils {
@@ -18,5 +22,12 @@ public class DateUtils {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static int distanceDays(String startDate,String endDate){
+        LocalDate startLocal = LocalDate.parse(startDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate endLocal = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        Period between = Period.between(startLocal, endLocal);
+        return between.getDays();
     }
 }

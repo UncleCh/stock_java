@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ public class StockSelectServiceTest extends BaseStockTest{
 
     @Test
     public void selectStockByPeriod() throws Exception {
-        Map<Integer, List<ContinueStockDesc>> result = stockAnalysis.getStockDataByContinuePercent(period, value -> value > 0.1, SelectStrategyType.CONTINUE_GROWTH, stocks);
+        Map<Integer, LinkedList<ContinueStockDesc>> result = stockAnalysis.getStockDataByContinuePercent(period, value -> value > 0.1, SelectStrategyType.CONTINUE_GROWTH, stocks);
         List<ContinueStockDesc> continueStockDescs = result.get(result.size());
         AnalysisStock analysisStock = selectService.analysisiStockByPeriod(period,600129,continueStockDescs);
         System.out.println(analysisStock);

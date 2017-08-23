@@ -19,6 +19,8 @@ public class AnalysisStock {
     private ObjectId id;
     //  当前周期 振幅次数
     private int amplitudeCount;
+    //振幅 间隔时间 过滤为0的数据
+    private double days;
     // 当前价格
     private double curPrice;
     // position /  size  偏小 良好
@@ -30,8 +32,8 @@ public class AnalysisStock {
     private List<Stock> maxPriceList = new LinkedList<>();
 
     private String startDate;
-    private Map<Integer, List<ContinueStockDesc>> growthMap;
-    private Map<Integer, List<ContinueStockDesc>> fallMap;
+    private Map<Integer, LinkedList<ContinueStockDesc>> growthMap;
+    private Map<Integer, LinkedList<ContinueStockDesc>> fallMap;
 
 
     public AnalysisStock(int amplitudeCount, double curPricePercent, double curPeriodMaxPrice) {
@@ -84,19 +86,19 @@ public class AnalysisStock {
         this.startDate = startDate;
     }
 
-    public Map<Integer, List<ContinueStockDesc>> getGrowthMap() {
+    public Map<Integer, LinkedList<ContinueStockDesc>> getGrowthMap() {
         return growthMap;
     }
 
-    public void setGrowthMap(Map<Integer, List<ContinueStockDesc>> growthMap) {
+    public void setGrowthMap(Map<Integer, LinkedList<ContinueStockDesc>> growthMap) {
         this.growthMap = growthMap;
     }
 
-    public Map<Integer, List<ContinueStockDesc>> getFallMap() {
+    public Map<Integer, LinkedList<ContinueStockDesc>> getFallMap() {
         return fallMap;
     }
 
-    public void setFallMap(Map<Integer, List<ContinueStockDesc>> fallMap) {
+    public void setFallMap(Map<Integer, LinkedList<ContinueStockDesc>> fallMap) {
         this.fallMap = fallMap;
     }
 
@@ -108,7 +110,14 @@ public class AnalysisStock {
         this.code = code;
     }
 
-//    private int calGoodMarket(){
+    public double getDays() {
+        return days;
+    }
+
+    public void setDays(double days) {
+        this.days = days;
+    }
+    //    private int calGoodMarket(){
 ////        com.google.common.collect.ImmutableSet.of("2005年6月6日","2008年10月28日","2012年12月4日","2013年6月25日")
 //    }
 
