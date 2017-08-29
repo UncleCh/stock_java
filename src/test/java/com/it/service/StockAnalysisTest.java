@@ -1,6 +1,7 @@
 package com.it.service;
 
 
+import com.google.common.primitives.Doubles;
 import com.it.bean.*;
 import com.it.collect.StockCollector;
 import com.it.repository.AnalysisRepository;
@@ -8,11 +9,9 @@ import com.it.repository.StockRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 public class StockAnalysisTest extends BaseStockTest {
@@ -27,6 +26,8 @@ public class StockAnalysisTest extends BaseStockTest {
     StockRepository stockRepository;
     @Autowired
     private StockSelectService selectService;
+    @Autowired
+    MongoTemplate mongoTemplate;
 
     @Test
     public void testGetStockDataByContinuePercent() {
@@ -59,13 +60,37 @@ public class StockAnalysisTest extends BaseStockTest {
         for (StockBasicInfo stock : stockSet) {
             stocks = stockRepository.findByCodeOrderByDateAsc(Double.parseDouble(stock.getCode()));
             Map<Integer, LinkedList<ContinueStockDesc>> result = stockAnalysis.getStockDataByContinuePercent(period, value -> value > 0.1,
-                            SelectStrategyType.CONTINUE_GROWTH, stocks);
+                    SelectStrategyType.CONTINUE_GROWTH, stocks);
             List<ContinueStockDesc> continueStockDescs = result.get(result.size());
             AnalysisStock analysisStock = selectService.analysisiStockByPeriod(period,
                     Integer.parseInt(stock.getCode()), continueStockDescs);
             analysisStock.setGrowthMap(result);
             AnalysisStock insert = analysisRepository.insert(analysisStock);
         }
+    }
+
+    @Test
+    public void selectStock() {
+        List<AnalysisStock> all = mongoTemplate.findAll(AnalysisStock.class);
+        all.stream().filter(analysisStock -> {
+            //限制价格
+            return analysisStock.getCurPeriodMaxPrice() > 10 && analysisStock.getCurPeriodMaxPrice() < 25;
+        }).filter(analysisStock -> {
+            //振幅次数
+            return analysisStock.getAmplitudeCount() > 10 && analysisStock.getCurPrice() > 0;
+        }).filter(analysisStock -> {
+            //相对低值
+            return analysisStock.curPeriodMinPecent < 0.2;
+        }).filter(analysisStock -> analysisStock.getDays() < 20 )
+                .sorted((o1, o2) -> {
+                    // 大到小
+                    return Doubles.compare(o2.getAvgDayAmplitudeCount(), o1.getAvgDayAmplitudeCount());
+                }).sorted((o1, o2) -> Double.compare(o1.getDays(),o2.getDays()))
+                .forEach(analysisStock -> {
+                    String s = analysisStock.toString();
+                    System.out.println(s);
+                });
+
     }
 
 }

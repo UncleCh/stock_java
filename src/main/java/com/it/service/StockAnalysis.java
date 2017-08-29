@@ -89,9 +89,9 @@ public class StockAnalysis {
 
     public Map<Integer, Stock> getMinPrice(int period, List<Stock> stocks) {
         return getStockByOperator(period, stocks, stocks1 -> {
-            Stock minStock = new Stock();
+            Stock minStock = stocks1.get(0);
             for (Stock stock : stocks1) {
-                if (stock.getMin_price() > minStock.getMin_price())
+                if (stock.getMin_price() < minStock.getMin_price())
                     minStock = stock;
             }
             return minStock;

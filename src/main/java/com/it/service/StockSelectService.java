@@ -76,8 +76,13 @@ public class StockSelectService {
         Stock maxStock = curPeriodMaxPrice.get(curPeriodMaxPrice.size());
         double curPeriodAmplitude = (maxStock.getMax_price() - minStock.getMin_price()) / minStock.getMin_price();
         analysisStock.setCurPeriodAmplitude(curPeriodAmplitude);
+        analysisStock.setAvgDayAmplitudeCount(((double) analysisStock.getAmplitudeCount()) / (stocks.size() % period));
         analysisStock.setCode(stockCode + "");
         analysisStock.setStartDate(stocks.get(0).getDate());
+        analysisStock.curPeriodPecent = Math.abs(recentStock.getClose_price() - analysisStock.getCurPeriodMaxPrice()) / recentStock.getClose_price();
+        analysisStock.curPeriodMinPecent = Math.abs(recentStock.getClose_price() - minStock.getClose_price()) / recentStock.getClose_price();
+        analysisStock.recentPrice = recentStock.getClose_price();
+        analysisStock.curPeriodMinPrice = minStock.getClose_price();
         return analysisStock;
     }
 }
