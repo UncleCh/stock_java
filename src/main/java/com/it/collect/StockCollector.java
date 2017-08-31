@@ -8,6 +8,7 @@ import com.it.bean.StockBasicInfo;
 import com.it.bean.StockInfo;
 import com.it.bean.StockPeriod;
 import com.it.repository.StockBasicRepository;
+import com.it.repository.StockCollectRepository;
 import com.it.repository.StockRepository;
 import com.it.util.Constant;
 import com.it.util.HttpUtils;
@@ -46,6 +47,8 @@ public class StockCollector {
     private MongoTemplate mongoTemplate;
     @Autowired
     private StockBasicRepository stockBasicRepository;
+    @Autowired
+    StockCollectRepository collectRepository;
     private Logger logger = LoggerFactory.getLogger(StockCollector.class);
 
     @Autowired
@@ -119,10 +122,11 @@ public class StockCollector {
 
     }
 
-    public Set<StockBasicInfo> getStockList(Predicate<StockBasicInfo> condition) {
-        Set<StockBasicInfo> codes = Sets.newHashSet();
+    public List<StockBasicInfo> getStockList(Predicate<StockBasicInfo> condition) {
+        List<StockBasicInfo> codes = Lists.newArrayList();
         List<StockBasicInfo> all = mongoTemplate.findAll(StockBasicInfo.class);
-//        all = new ArrayList<>(all.subList(0, 30));
+        if(condition == null)
+            condition = stockBasicInfo -> true;
         all.stream().filter(condition).forEach(stockBasicInfo -> codes.add(stockBasicInfo));
         return codes;
     }
@@ -134,9 +138,7 @@ public class StockCollector {
         return codes;
     }
 
-    public Set<StockBasicInfo> getStockList() {
-        return getStockList(stockBasicInfo -> true);
-    }
+
 
 
     public Set<StockBasicInfo> getUnCatchStockCode() {
@@ -167,7 +169,7 @@ public class StockCollector {
 
     //根据股票列表筛选，去除垃圾股,更新股票列表
     public Map<String, Set<StockBasicInfo>> getConditionStockList() {
-        Set<StockBasicInfo> stockList = getStockList();
+        List<StockBasicInfo> stockList = getStockList(null);
         Set<StockBasicInfo> garbageList = Sets.newHashSet();
         Set<StockBasicInfo> needList = Sets.newHashSet();
         Set<StockBasicInfo> needUpdateList = Sets.newHashSet();

@@ -3,6 +3,7 @@ package com.it.collect;
 import com.google.common.collect.Lists;
 import com.it.bean.Stock;
 import com.it.bean.StockBasicInfo;
+import com.it.repository.StockCollectRepository;
 import com.it.util.Constant;
 import com.it.util.DateUtils;
 import com.it.util.StockConfig;
@@ -34,6 +35,7 @@ public class PagerProcess implements PageProcessor {
     private StockCollector stockCollector;
     private MongoTemplate mongoTemplate;
     private Set<StockBasicInfo> stockList;
+    private StockCollectRepository collectRepository;
     private AtomicInteger count = new AtomicInteger(0);
     private static AtomicBoolean isAdd = new AtomicBoolean(false);
 
@@ -46,16 +48,7 @@ public class PagerProcess implements PageProcessor {
         if (!isAdd.get()) {
             synchronized (isAdd) {
                 if (!isAdd.get()) {
-                    Query query = new Query();
-                    query.addCriteria(Criteria.where("key").is(Constant.STOCK_NEED_CATCHED));
-                    List<Map> maps = mongoTemplate.find(query, Map.class, Constant.STOCK_CONFIG);
-                    if (CollectionUtils.isNotEmpty(maps)) {
-                        List<StockBasicInfo> stockList = (List<StockBasicInfo>) maps.get(0).get(Constant.STOCK_NEED_CATCHED);
-                        this.stockList = Sets.newHashSet();
-                        this.stockList.addAll(stockList.subList(0,100));
-                    } else {
-                        stockList = stockCollector.getUnCatchStockCode();
-                    }
+                    List<StockBasicInfo> stockList = collectRepository.getNeedCatchStock();
                     for (StockBasicInfo stockCode : stockList) {
                         if (stockCode.getCode().length() < 6)
                             stockCode.setCode(String.format("%06s", stockCode.getCode()));
@@ -69,7 +62,7 @@ public class PagerProcess implements PageProcessor {
         List<Stock> results = Lists.newArrayList();
         int catchedSize = count.incrementAndGet();
         getStockDataBySpider(stockCode, doc, results);
-        if (catchedSize > stockList.size())
+        if (catchedSize >= stockList.size())
             stockCollector.initCatchedStock();
         page.putField("data", results);
 
@@ -87,7 +80,7 @@ public class PagerProcess implements PageProcessor {
                     String date = DateUtils.toSystemDate(td.get(0).text());
                     Stock stock = new Stock();
                     stock.setDate(date);
-                    stock.setCode(Double.parseDouble(stockCode));
+                    stock.setCode(stockCode);
                     stock.setOpen_price(Double.parseDouble(td.get(1).text()));
                     stock.setMax_price(Double.parseDouble(td.get(2).text()));
                     stock.setMin_price(Double.parseDouble(td.get(3).text()));

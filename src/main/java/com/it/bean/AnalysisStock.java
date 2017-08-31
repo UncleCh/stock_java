@@ -1,6 +1,5 @@
 package com.it.bean;
 
-import com.google.common.base.MoreObjects;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -19,7 +18,7 @@ public class AnalysisStock {
     private ObjectId id;
     //  当前周期 振幅次数
     private int amplitudeCount;
-    //平均每天的振幅周期
+    //平均每天的振幅 越大越好
     private double avgDayAmplitudeCount;
     //振幅 间隔时间 过滤为0的数据
     private double days;

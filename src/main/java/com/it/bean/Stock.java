@@ -26,7 +26,7 @@ public class Stock {
     //开盘价
     private double open_price;
     //股票代码
-    private double code;
+    private String code;
     //最高价
     private double max_price;
     //日期，例如2015-09-02
@@ -108,11 +108,11 @@ public class Stock {
         this.open_price = open_price;
     }
 
-    public double getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(double code) {
+    public void setCode(String code) {
         this.code = code;
     }
 

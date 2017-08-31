@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface StockRepository extends MongoRepository<Stock, Integer> {
 
-    List<Stock> findByCodeOrderByDateAsc(double stockCode);
+    Stock findByCodeOrderByDateAsc(String stockCode);
+
+    Stock  findByCodeOrderByDateDesc(String stockCode);
 
 
 }

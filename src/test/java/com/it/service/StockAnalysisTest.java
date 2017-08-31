@@ -88,7 +88,7 @@ public class StockAnalysisTest extends BaseStockTest {
                 }).sorted((o1, o2) -> Double.compare(o1.getDays(),o2.getDays()))
                 .forEach(analysisStock -> {
                     String s = analysisStock.toString();
-                    System.out.println(s);
+                    System.out.println(analysisStock.getCode());
                 });
 
     }
