@@ -1,6 +1,10 @@
-package com.it.service;
+package com.it.service.analysis;
 
 import com.it.bean.SelectStrategyType;
+import com.it.service.analysis.ContinueFallMax;
+import com.it.service.analysis.ContinueGrowth;
+import com.it.service.analysis.ContinueGrowthMax;
+import com.it.service.analysis.SelectStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;

@@ -1,16 +1,14 @@
-package com.it.service;
+package com.it.service.analysis;
 
 import com.google.common.collect.Lists;
 import com.it.bean.Stock;
-import com.it.util.StockConfig;
-import org.aeonbits.owner.ConfigFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
 
 @Service
-public class ContinueFallMax implements  SelectStrategy {
+public class ContinueFallMax implements SelectStrategy {
     @Override
     public List<LinkedList<Stock>> calContinueGrowth(int curPeriodIndex, List<Stock> stocks) {
         List<LinkedList<Stock>> periodResult = Lists.newArrayList();

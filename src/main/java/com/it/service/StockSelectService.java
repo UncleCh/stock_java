@@ -35,10 +35,12 @@ public class StockSelectService {
     }
 
     public AnalysisStock analysisiStockByPeriod(int period, int stockCode, List<ContinueStockDesc> curPeriod) {
-        List<Stock> stocks = stockRepository.findByCodeOrderByDateAsc(Double.parseDouble(stockCode + ""));
-        if (stocks.size() == 0)
+        Stock stocks = stockRepository.findByCodeOrderByDateAsc(stockCode +"");
+        List<Stock> all = stockRepository.findAll();
+        if (stocks == null)
             throw new RuntimeException("数据异常:" + stockCode);
-        Map<Integer, LinkedList<ContinueStockDesc>> fallResult = stockAnalysis.getStockDataByContinuePercent(period, value -> value < -0.06, SelectStrategyType.CONTINUE_FALL_MAX, stocks);
+        Map<Integer, LinkedList<ContinueStockDesc>> fallResult = stockAnalysis.getStockDataByContinuePercent(period, value -> value < -0.06,
+                SelectStrategyType.CONTINUE_FALL_MAX, all);
         LinkedList<ContinueStockDesc> curPeriodStock = fallResult.get(fallResult.size());
         curPeriodStock.addAll(curPeriod);
         ArrayList<Double> prices = Lists.newArrayList();
@@ -51,7 +53,7 @@ public class StockSelectService {
         prices.add(recentStock.getClose_price());
         prices.sort(Double::compare);
         double i = prices.indexOf(recentStock.getClose_price());
-        Map<Integer, Stock> curPeriodMaxPrice = stockAnalysis.getMaxPrice(period, stocks);
+        Map<Integer, Stock> curPeriodMaxPrice = stockAnalysis.getMaxPrice(period, all);
         double days = 0;
         if (curPeriodStock.size() > 0) {
             ListIterator<ContinueStockDesc> listIterator = curPeriodStock.listIterator();
@@ -71,14 +73,14 @@ public class StockSelectService {
         for (Map.Entry<Integer, Stock> entry : curPeriodMaxPrice.entrySet()) {
             analysisStock.addPrice(entry.getValue());
         }
-        Map<Integer, Stock> minPrice = stockAnalysis.getMinPrice(period, stocks);
+        Map<Integer, Stock> minPrice = stockAnalysis.getMinPrice(period, all);
         Stock minStock = minPrice.get(minPrice.size());
         Stock maxStock = curPeriodMaxPrice.get(curPeriodMaxPrice.size());
         double curPeriodAmplitude = (maxStock.getMax_price() - minStock.getMin_price()) / minStock.getMin_price();
         analysisStock.setCurPeriodAmplitude(curPeriodAmplitude);
-        analysisStock.setAvgDayAmplitudeCount(((double) analysisStock.getAmplitudeCount()) / (stocks.size() % period));
+        analysisStock.setAvgDayAmplitudeCount(((double) analysisStock.getAmplitudeCount()) / (all.size() % period));
         analysisStock.setCode(stockCode + "");
-        analysisStock.setStartDate(stocks.get(0).getDate());
+        analysisStock.setStartDate(all.get(0).getDate());
         analysisStock.curPeriodPecent = Math.abs(recentStock.getClose_price() - analysisStock.getCurPeriodMaxPrice()) / recentStock.getClose_price();
         analysisStock.curPeriodMinPecent = Math.abs(recentStock.getClose_price() - minStock.getClose_price()) / recentStock.getClose_price();
         analysisStock.recentPrice = recentStock.getClose_price();

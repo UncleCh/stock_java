@@ -1,4 +1,4 @@
-package com.it.service;
+package com.it.service.analysis;
 
 
 import com.it.bean.Stock;

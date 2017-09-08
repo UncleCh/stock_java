@@ -6,6 +6,8 @@ import com.google.common.collect.Maps;
 import com.it.bean.ContinueStockDesc;
 import com.it.bean.SelectStrategyType;
 import com.it.bean.Stock;
+import com.it.service.analysis.SelectStrategy;
+import com.it.service.analysis.SelectStrategyManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
