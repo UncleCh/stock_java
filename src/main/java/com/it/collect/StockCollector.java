@@ -2,9 +2,9 @@ package com.it.collect;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.it.bean.StockBasicInfo;
+import com.it.bean.StockClassification;
 import com.it.bean.StockInfo;
 import com.it.bean.StockPeriod;
 import com.it.repository.StockBasicRepository;
@@ -14,7 +14,6 @@ import com.it.util.Constant;
 import com.it.util.HttpUtils;
 import com.it.util.StockConfig;
 import com.mongodb.WriteResult;
-import org.aeonbits.owner.ConfigFactory;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -24,19 +23,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.aggregation.GroupOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import us.codecraft.webmagic.Spider;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -49,6 +42,8 @@ public class StockCollector {
     private StockBasicRepository stockBasicRepository;
     @Autowired
     StockCollectRepository collectRepository;
+    @Autowired
+    StockResource stockDao;
     private Logger logger = LoggerFactory.getLogger(StockCollector.class);
 
     @Autowired
@@ -58,7 +53,7 @@ public class StockCollector {
     }
 
     public void initHistoryStock() {
-        StockConfig stockConfig = ConfigFactory.create(StockConfig.class);
+        StockConfig stockConfig = StockConfig.getConfig();
         String stockCode = stockConfig.stockCodeList();
         Spider.create(new PagerProcess(this, mongoTemplate)).addUrl(stockConfig.historyStockUrl() + stockCode).
                 addPipeline(new StockPipeline(stockRepository)).thread(1).run();
@@ -125,6 +120,7 @@ public class StockCollector {
     public List<StockBasicInfo> getStockList(Predicate<StockBasicInfo> condition) {
         List<StockBasicInfo> codes = Lists.newArrayList();
         List<StockBasicInfo> all = mongoTemplate.findAll(StockBasicInfo.class);
+        all = new ArrayList<>(all.subList(0,3));
         if(condition == null)
             condition = stockBasicInfo -> true;
         all.stream().filter(condition).forEach(stockBasicInfo -> codes.add(stockBasicInfo));
@@ -142,62 +138,40 @@ public class StockCollector {
 
 
     public Set<StockBasicInfo> getUnCatchStockCode() {
-        Map<String, Set<StockBasicInfo>> conditionStockList = getConditionStockList();
-        Map<String, Object> catchCodes = Maps.newHashMap();
-        catchCodes.put(Constant.STOCK_GARBAGE_CATCHED, conditionStockList.get(Constant.STOCK_GARBAGE_CATCHED));
-        catchCodes.put("key", Constant.STOCK_GARBAGE_CATCHED);
-        mongoTemplate.insert(catchCodes, Constant.STOCK_CONFIG);
-        Set<StockBasicInfo> stockList = conditionStockList.get(Constant.STOCK_NEED_CATCHED);
-        catchCodes = Maps.newHashMap();
-        catchCodes.put(Constant.STOCK_NEED_CATCHED, stockList);
-        catchCodes.put("key", Constant.STOCK_NEED_CATCHED);
-        mongoTemplate.insert(catchCodes, Constant.STOCK_CONFIG);
-        Query query = new Query();
-        query.addCriteria(Criteria.where("key").is(Constant.STOCK_NEED_CATCHED));
-        List<Map> maps = mongoTemplate.find(query, Map.class, Constant.STOCK_CONFIG);
-        List<String> codes = (List<String>) maps.get(0).get(Constant.STOCK_CATCHED);
-        if (CollectionUtils.isNotEmpty(codes)) {
-            List<StockBasicInfo> temp = Lists.newArrayList();
-            for (String code : codes) {
-                StockBasicInfo stockBasicInfo = stockBasicRepository.findByCode(Double.parseDouble(code));
-                temp.add(stockBasicInfo);
-            }
-            stockList.removeAll(temp);
-        }
-        return stockList;
+        StockClassification stockClassification = stockClassification();
+        Set<StockBasicInfo> needList = stockClassification.getNeedList();
+        Set<StockBasicInfo> catchedStock = collectRepository.getCatchedStockBasicInfo();
+        needList.removeAll(catchedStock);
+        return needList;
     }
 
-    //根据股票列表筛选，去除垃圾股,更新股票列表
-    public Map<String, Set<StockBasicInfo>> getConditionStockList() {
+    /**
+     * 对股票列表做一个基本分类
+     * @return
+     */
+    public StockClassification stockClassification() {
         List<StockBasicInfo> stockList = getStockList(null);
-        Set<StockBasicInfo> garbageList = Sets.newHashSet();
-        Set<StockBasicInfo> needList = Sets.newHashSet();
-        Set<StockBasicInfo> needUpdateList = Sets.newHashSet();
+        StockClassification stockFilter = new StockClassification();
         List<StockBasicInfo> objects = Lists.newArrayList();
         objects.addAll(stockList);
-        List<StockInfo> stockInfo = getStockInfo(objects);
+        List<StockInfo> stockInfo = stockDao.getRealStockInfo(objects);
         for (StockBasicInfo basicInfo : stockList) {
             double totalPrice = basicInfo.getTotalPrice();
             if (totalPrice <= 0)
                 totalPrice = getStockClosePrice(basicInfo, stockInfo) * Double.parseDouble(StringUtils.
                         defaultIfEmpty(basicInfo.getTotalcapital(), "0"));
             if (totalPrice < Constant.GARBAGE_PRICE) {
-                garbageList.add(basicInfo);
+                stockFilter.addGarbageList(basicInfo);
                 logger.info("垃圾股: {} 总市值:{}", basicInfo.getCode(),totalPrice);
             } else {
-                needList.add(basicInfo);
+                stockFilter.addNeedList(basicInfo);
             }
             if (basicInfo.getTotalPrice() <= 0) {
                 basicInfo.setTotalPrice(totalPrice);
-                needUpdateList.add(basicInfo);
+                stockFilter.addNeedUpdateList(basicInfo);
             }
         }
-        Map<String, Set<StockBasicInfo>> result = Maps.newHashMap();
-        result.put(Constant.STOCK_NEED_CATCHED, needList);
-        result.put(Constant.STOCK_GARBAGE_CATCHED, garbageList);
-        if (CollectionUtils.isNotEmpty(needUpdateList))
-            stockBasicRepository.save(needUpdateList);
-        return result;
+        return stockFilter;
     }
 
     private double getStockClosePrice(StockBasicInfo basicInfo, List<StockInfo> stockInfo) {
@@ -207,22 +181,7 @@ public class StockCollector {
         return 0;
     }
 
-    public void initCatchedStock() {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("key").is(Constant.STOCK_CATCHED));
-        mongoTemplate.remove(query, Constant.STOCK_CONFIG);
-        GroupOperation code = Aggregation.group("code").count().as("count");
-        Aggregation aggregation = Aggregation.newAggregation(code);
-        AggregationResults<Map> ali_stock = mongoTemplate.aggregate(aggregation, "ali_stock", Map.class);
-        List<Map> mappedResults = ali_stock.getMappedResults();
-        List<String> codes = Lists.newArrayList();
-        mappedResults.forEach(map -> codes.add(map.get("_id").toString()));
-        Map<String, Object> catchCodes = Maps.newHashMap();
-        catchCodes.put(Constant.STOCK_CATCHED, codes);
-        catchCodes.put("key", Constant.STOCK_CATCHED);
-        mongoTemplate.insert(catchCodes, Constant.STOCK_CONFIG);
-        logger.info("更新已经完成捕获的股票代码：{}", catchCodes);
-    }
+
 
     /**
      * @param stocks 股票编码 。多个股票代码间以英文逗号分隔，最多输入50个代码。
@@ -251,44 +210,11 @@ public class StockCollector {
         }
     }
 
-    private List<StockInfo> collectStockInfo(List<StockBasicInfo> stockBasicInfoList) {
-        List<StockInfo> result = Lists.newArrayList();
-        int start = 0, end = 0;
-        do {
-            if (stockBasicInfoList.size() > end + 50)
-                end += 50;
-            else
-                end = end + stockBasicInfoList.size() - start;
-            String codes = stockBasicInfoList.subList(start, end).stream().map(stockBasicInfo -> stockBasicInfo.getMarket() + stockBasicInfo.getCode()).collect(Collectors.joining(","));
-            List<StockInfo> stockInfo = getStockInfo(codes);
-            mongoTemplate.insertAll(Lists.newArrayList(stockInfo));
-            result.addAll(stockInfo);
-            start = end;
-        }
-        while (end < stockBasicInfoList.size());
-        return result;
-    }
 
 
-    public List<StockInfo> getStockInfo(List<StockBasicInfo> stocks) {
-        List<StockInfo> all = mongoTemplate.findAll(StockInfo.class);
-        List<StockInfo> result = Lists.newArrayList();
-        List<StockBasicInfo> needCatch = Lists.newArrayList(stocks);
-        for (StockBasicInfo basicInfo : stocks) {
-            for (StockInfo stockInfo : all) {
-                if (stockInfo.getCode().equals(basicInfo.getCode())) {
-                    result.add(stockInfo);
-                    needCatch.remove(basicInfo);
-                }
-            }
-        }
-        if (CollectionUtils.isNotEmpty(needCatch)) {
-            List<StockInfo> stockInfoList = collectStockInfo(needCatch);
-            result.addAll(stockInfoList);
-            mongoTemplate.insertAll(stockInfoList);
-        }
-        return result;
-    }
+
+
+
 
 
     private double getStockClosePrice(String code, int count, String host) {

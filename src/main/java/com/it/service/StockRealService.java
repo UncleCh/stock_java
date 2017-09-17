@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class StockRealService {
@@ -48,7 +49,7 @@ public class StockRealService {
             stock.setCode(realPojo.getFullCode().substring(2));
             stock.setMax_price(realPojo.getHigh());
             stock.setDate(realPojo.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            Stock yesterdayStock = stockRepository.findByCodeOrderByDateDesc(stock.getCode());
+            Stock yesterdayStock = stockRepository.findByCodeOrderByDateDesc(stock.getCode()).get(0);
             double changePercent = (yesterdayStock.getClose_price() - stock.getClose_price()) / stock.getClose_price();
             stock.setInc_percent(changePercent);
             double maxMinPer = (realPojo.getHigh() - realPojo.getLow()) / stock.getClose_price();
@@ -59,7 +60,7 @@ public class StockRealService {
     }
 
     private List<RealTimeDataPOJO> getCatchedCodeRealInfo(StockCollectRepository collectRepository) {
-        List<StockBasicInfo> catchedStock = collectRepository.getCatchedStock();
+        Set<StockBasicInfo> catchedStock = collectRepository.getCatchedStockBasicInfo();
         List<String> codeList = Lists.newArrayList();
         for (StockBasicInfo stockInfo : catchedStock) {
             codeList.add(stockInfo.getCode());

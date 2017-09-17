@@ -2,6 +2,7 @@ package com.it.collect;
 
 import com.it.bean.Stock;
 import com.it.repository.StockRepository;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import us.codecraft.webmagic.ResultItems;
@@ -28,7 +29,9 @@ public class StockPipeline implements Pipeline {
     @Override
     public void process(ResultItems resultItems, Task task) {
         List<Stock> stocks = resultItems.get("data");
-        List<Stock> insert = stockRepository.insert(stocks);
-        logger.info("catch stock data finish size:{} insert size:{}", stocks.size(), insert.size());
+        if (CollectionUtils.isNotEmpty(stocks)) {
+            List<Stock> insert = stockRepository.insert(stocks);
+            logger.info("catch stock data finish size:{} insert size:{}", stocks.size(), insert.size());
+        }
     }
 }

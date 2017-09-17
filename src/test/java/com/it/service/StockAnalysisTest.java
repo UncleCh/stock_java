@@ -58,7 +58,7 @@ public class StockAnalysisTest extends BaseStockTest {
         Set<StockBasicInfo> stockSet = stockCollector.getStockSet(stockBasicInfo -> stockBasicInfo.getPeriod() != 0);
         System.out.println(stockSet.size());
         for (StockBasicInfo stock : stockSet) {
-            stocks = stockRepository.findByCodeOrderByDateAsc(Double.parseDouble(stock.getCode()));
+            stocks = stockRepository.findByCodeOrderByDateAsc(stock.getCode());
             Map<Integer, LinkedList<ContinueStockDesc>> result = stockAnalysis.getStockDataByContinuePercent(period, value -> value > 0.1,
                     SelectStrategyType.CONTINUE_GROWTH, stocks);
             List<ContinueStockDesc> continueStockDescs = result.get(result.size());

@@ -8,6 +8,7 @@ import com.it.bean.SelectStrategyType;
 import com.it.bean.Stock;
 import com.it.repository.StockRepository;
 import com.it.util.DateUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +36,9 @@ public class StockSelectService {
     }
 
     public AnalysisStock analysisiStockByPeriod(int period, int stockCode, List<ContinueStockDesc> curPeriod) {
-        Stock stocks = stockRepository.findByCodeOrderByDateAsc(stockCode +"");
+        List<Stock> stocks = stockRepository.findByCodeOrderByDateAsc(stockCode +"");
         List<Stock> all = stockRepository.findAll();
-        if (stocks == null)
+        if (CollectionUtils.isEmpty(stocks))
             throw new RuntimeException("数据异常:" + stockCode);
         Map<Integer, LinkedList<ContinueStockDesc>> fallResult = stockAnalysis.getStockDataByContinuePercent(period, value -> value < -0.06,
                 SelectStrategyType.CONTINUE_FALL_MAX, all);

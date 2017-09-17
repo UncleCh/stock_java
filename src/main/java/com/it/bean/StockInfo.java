@@ -4,6 +4,9 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * 阿里云市场 实时股票信息
+ */
 @Document(collection = "stock_info")
 public class StockInfo {
     @Id

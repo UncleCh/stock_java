@@ -4,27 +4,23 @@ import com.google.common.collect.Lists;
 import com.it.bean.Stock;
 import com.it.bean.StockBasicInfo;
 import com.it.repository.StockCollectRepository;
-import com.it.util.Constant;
 import com.it.util.DateUtils;
 import com.it.util.StockConfig;
 import org.aeonbits.owner.ConfigFactory;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
-import org.assertj.core.util.Sets;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
 
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -34,10 +30,9 @@ public class PagerProcess implements PageProcessor {
     private static Logger logger = LoggerFactory.getLogger(PagerProcess.class);
     private StockCollector stockCollector;
     private MongoTemplate mongoTemplate;
-    private Set<StockBasicInfo> stockList;
     private StockCollectRepository collectRepository;
-    private AtomicInteger count = new AtomicInteger(0);
     private static AtomicBoolean isAdd = new AtomicBoolean(false);
+    private static AtomicInteger count = new AtomicInteger(0);
 
     public PagerProcess(StockCollector stockCollector, MongoTemplate mongoTemplate) {
         this.stockCollector = Objects.requireNonNull(stockCollector);
@@ -45,27 +40,31 @@ public class PagerProcess implements PageProcessor {
     }
 
     public void process(Page page) {
+        count.incrementAndGet();
         if (!isAdd.get()) {
             synchronized (isAdd) {
                 if (!isAdd.get()) {
-                    List<StockBasicInfo> stockList = collectRepository.getNeedCatchStock();
-                    for (StockBasicInfo stockCode : stockList) {
+                    Set<StockBasicInfo> unCatchStockCode = stockCollector.getUnCatchStockCode();
+                    for (StockBasicInfo stockCode : unCatchStockCode) {
                         if (stockCode.getCode().length() < 6)
                             stockCode.setCode(String.format("%06s", stockCode.getCode()));
                         page.addTargetRequest(StockConfig.getConfig().historyStockUrl().concat(stockCode.getCode()));
                     }
+                    isAdd.set(true);
+                    logger.info("need catch size :{}",unCatchStockCode.size());
+                    return;
                 }
             }
         }
         Document doc = page.getHtml().getDocument();
         String stockCode = page.getRequest().getUrl().split("=")[1];
         List<Stock> results = Lists.newArrayList();
-        int catchedSize = count.incrementAndGet();
+
         getStockDataBySpider(stockCode, doc, results);
-        if (catchedSize >= stockList.size())
-            stockCollector.initCatchedStock();
+
         page.putField("data", results);
 
+        logger.info("current size : {}",count.get());
     }
 
     private void getStockDataBySpider(String stockCode, Document doc, final List<Stock> results) {
