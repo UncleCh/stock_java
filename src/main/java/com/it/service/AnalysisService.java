@@ -84,16 +84,16 @@ public class AnalysisService {
         }
     }
 
-    public void analysisByCode(String code){
+    public void analysisByCode(String code) {
         Stock stock = stockMapper.getStock(code, null);
         stockService.analysisStock(stock);
     }
 
-    public void analysisIndustryTrend(){
+    public void analysisIndustryTrend() {
 
-        List<AnalysisTrend> trendList = trendMapper.getAnalysisTrendList(0.2,"UP");
+        List<AnalysisTrend> trendList = trendMapper.getAnalysisTrendList(0.2, "UP");
         Map<String, List<AnalysisTrend>> groupByCode = trendList.stream().collect(Collectors.groupingBy(AnalysisTrend::getCode));
-
+        // 行情分析  1 求时间的交集  2  成交量确认
 
     }
 
