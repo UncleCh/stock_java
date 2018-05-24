@@ -92,6 +92,8 @@ public class AnalysisService {
     public void analysisIndustryTrend(){
 
         List<AnalysisTrend> trendList = trendMapper.getAnalysisTrendList(0.2,"UP");
+        Map<String, List<AnalysisTrend>> groupByCode = trendList.stream().collect(Collectors.groupingBy(AnalysisTrend::getCode));
+
 
     }
 
