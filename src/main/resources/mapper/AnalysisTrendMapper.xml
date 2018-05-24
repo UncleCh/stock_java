@@ -10,6 +10,12 @@
         where id = #{id}
     </select>
 
+    <select id="getAnalysisTrendList" resultMap="BaseResultMap" >
+        select id, code, trend,start_dt, end_dt, wave
+        from analysis_trend
+        where wave > #{wave} and trend = #{trend}
+    </select>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from analysis_trend
     where id = #{id}

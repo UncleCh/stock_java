@@ -81,7 +81,7 @@ public class StockService {
 
 
     public void analysisStock(Stock temp) {
-        List<Daily> dailyList = dailyMapper.getDailyList(temp.getCode(), "2017-06-01");
+        List<Daily> dailyList = dailyMapper.getDailyList(temp.getCode(), "2017-06-20");
         AnalysisTrendModel sortList = new AnalysisTrendModel();
         AnalysisTrend curTrend = null;
         for (Daily daily : dailyList) {
@@ -113,7 +113,7 @@ public class StockService {
                     AnalysisTrend analysisTrend = getAnalysisTrend(temp, sortList);
                     trendMapper.saveAnalysisTrend(analysisTrend);
                     sortList.clear();
-                    logger.info("趋势反转:{}" ,e.getMessage());
+                    logger.info("趋势反转:{}", e.getMessage());
                 }
 
             }
@@ -193,14 +193,8 @@ public class StockService {
         final WebDriver webDriver = new ChromeDriver();
         for (Stock temp : stocks) {
             Stock stock = stockMapper.getStock(temp.getCode(), null);
-            if (stock != null) {
-                stockMapper.updateStock(temp);
-                continue;
-            }
             String url = "https://www.iwencai.com/data-robot/extract-new?query=" + temp.getCode() +
                     "&querytype=stock&qsData=pc_~soniu~others~homepage~box~history&dataSource=hp_history";
-            if (!StringUtils.isEmpty(temp.getIndustry()))
-                continue;
             try {
                 webDriver.get(url);
                 WebDriverWait wait = new WebDriverWait(webDriver, 20);
@@ -214,7 +208,12 @@ public class StockService {
                     concepts.add(a);
                 }
                 temp.setConcept(JSONObject.toJSONString(concepts));
-                stockMapper.updateStock(temp);
+                if(temp.getDt() == null)
+                    temp.setDt(new Date());
+                if (stock == null)
+                    stockMapper.saveStock(temp);
+                else
+                    stockMapper.updateStock(temp);
             } catch (Exception e) {
                 logger.info(url, e);
             }

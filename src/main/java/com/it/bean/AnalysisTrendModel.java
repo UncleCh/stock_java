@@ -13,7 +13,7 @@ public class AnalysisTrendModel {
     private Daily max;
     private Daily min;
     private Queue<Daily> container = new ConcurrentLinkedQueue<>();
-    private int days = 30;
+    private int days = 60;
     private double wave = 0.1;
     private Trend curTrend;
     private double curWave;

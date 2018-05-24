@@ -1,6 +1,10 @@
 package com.it.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.it.bean.AnalysisTrend;
+import com.it.bean.Stock;
+import com.it.repository.AnalysisTrendMapper;
+import com.it.repository.StockMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -17,6 +21,13 @@ public class AnalysisService {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private StockMapper stockMapper;
+    @Autowired
+    private AnalysisTrendMapper trendMapper;
+
+    @Autowired
+    StockService stockService;
 
     public void analysis() {
         //统计股票表 行业 - 行业数量
@@ -41,7 +52,7 @@ public class AnalysisService {
             @Override
             public void accept(String industry, List<Map<String, Object>> maps) {
                 for (Map<String, Object> in : industryMap) {
-                    if(in.get("industry").toString().equals(industry)) {
+                    if (in.get("industry").toString().equals(industry)) {
                         int total = Integer.parseInt(in.get("industryCount").toString());
                         double v = maps.size() / (double) total;
                         DailyIndustry dailyIndustry = new DailyIndustry(industry, v, total + "");
@@ -61,6 +72,27 @@ public class AnalysisService {
 
             System.out.println(dailyIndustry);
         }
+    }
+
+    //根据观察的行业分类
+    public void analysis(String industry) {
+        Stock queryParam = new Stock();
+        queryParam.setObserverIndustry(industry.trim());
+        List<Stock> stockList = stockMapper.getStockList(queryParam);
+        for (Stock temp : stockList) {
+            stockService.analysisStock(temp);
+        }
+    }
+
+    public void analysisByCode(String code){
+        Stock stock = stockMapper.getStock(code, null);
+        stockService.analysisStock(stock);
+    }
+
+    public void analysisIndustryTrend(){
+
+        List<AnalysisTrend> trendList = trendMapper.getAnalysisTrendList(0.2,"UP");
+
     }
 
     static class DailyIndustry {

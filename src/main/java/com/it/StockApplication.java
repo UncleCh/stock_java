@@ -62,9 +62,7 @@ public class StockApplication implements CommandLineRunner {
 //
 //
 //        }
-        Stock stock = new Stock();
-        stock.setCode("600549");
-        stockService.analysisStock(stock);
+        analysisService.analysisByCode("600549");
 //        stockService.multiCollectStock();
 //        addAnalysis();
     }

@@ -16,6 +16,14 @@
             </if>
         </where>
     </select>
+    <select id="getStockList" resultMap="StockMap"  >
+        select * from stock
+        <where>
+            <if test="observerIndustry != null">
+                and observer_industry = #{observerIndustry}
+            </if>
+        </where>
+    </select>
 
     <select id="exits" resultType="boolean"  >
         select count(1) from stock where   dt = #{dt} and  code = #{code}

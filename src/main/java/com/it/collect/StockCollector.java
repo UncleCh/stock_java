@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.LinkedList;
@@ -34,8 +35,14 @@ public class StockCollector {
     private Map<String, WebDriver> browers = new ConcurrentHashMap<>();
 
     static {
-        System.setProperty("webdriver.chrome.driver",
-                "/Users/chenxiujiang/Downloads/chromedriver");
+        if (System.getProperty("os.name").toLowerCase().startsWith("windows")) {
+            System.setProperty("webdriver.chrome.driver",
+                    "D:/work\\it\\stock_java\\src\\main\\resources/chromedriver.exe");
+        } else {
+            System.setProperty("webdriver.chrome.driver",
+                    "/Users/chenxiujiang/Downloads/chromedriver");
+        }
+
     }
 
 
