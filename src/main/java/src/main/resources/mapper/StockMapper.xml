@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.it.repository.StockMapper" >
+
+    <resultMap id="StockMap" type="com.it.bean.Stock" />
+
+    <select id="getStock" resultMap="StockMap"  >
+        select * from stock
+        <where>
+            <if test="dt != null">
+                and dt = #{dt}
+            </if>
+            <if test="code != null">
+                and code = #{code}
+            </if>
+        </where>
+    </select>
+
+    <select id="exits" resultType="boolean"  >
+        select count(1) from stock where   dt = #{dt} and  code = #{code}
+    </select>
+
+
+
+
+    <select id="getDiffDt" resultMap="StockMap">
+        select dt from stock group by dt ORDER BY dt desc;
+    </select>
+
+    <insert id="saveStock" >
+        insert into stock (code, name,dt,weight,index_code,market,industry,concept,remark,observer_industry)
+        values (#{code}, #{name},#{dt},#{weight},#{indexCode},#{market},#{industry},#{concept},#{remark},#{observerIndustry})
+    </insert>
+
+    <update id="updateStock">
+        UPDATE stock SET
+        weight = #{weight}
+        ,industry = #{industry}
+        ,concept = #{concept}
+        ,remark = #{remark}
+        ,observer_industry = #{observerIndustry}
+        <where>
+            <if test="code != null">
+                code = #{code}
+            </if>
+        </where>
+    </update>
+
+    <delete id="delete">
+        delete from stock
+        <where>
+            <if test="code != null">
+                code = #{code}
+            </if>
+            <if test=" dt != null">
+                dt = #{dt}
+            </if>
+        </where>
+    </delete>
+
+</mapper>

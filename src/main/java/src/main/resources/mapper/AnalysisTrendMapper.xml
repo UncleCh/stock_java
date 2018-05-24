@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.it.repository.AnalysisTrendMapper">
+    <resultMap id="BaseResultMap" type="com.it.bean.AnalysisTrend"/>
+
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select id, code, trend,start_dt, end_dt, wave
+        from analysis_trend
+        where id = #{id}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from analysis_trend
+    where id = #{id}
+  </delete>
+
+
+    <insert id="saveAnalysisTrend"  useGeneratedKeys="true" keyProperty="id">
+      insert into analysis_trend (id,code, trend,start_dt,end_dt,wave,max,min)
+      values (#{id},#{code},#{trend},#{startDt},#{endDt},#{wave},#{max},#{min})
+    </insert>
+
+
+
+    <update id="updateByPrimaryKey">
+    update analysis_trend
+    set code = #{code},
+      trend = #{trend},
+      start_dt = #{startDt},
+      end_dt = #{endDt},
+      wave = #{wave}
+    where id = #{id}
+  </update>
+</mapper>

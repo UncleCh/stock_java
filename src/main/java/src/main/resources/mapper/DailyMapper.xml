@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.it.repository.DailyMapper">
+
+    <resultMap id="DailyMap" type="com.it.bean.Daily"/>
+
+    <select id="getStock" resultMap="DailyMap">
+        select * from daily
+        <where>
+            <if test="dt != null">
+                dt = #{dt}
+            </if>
+            <if test="code != null">
+                code = #{code}
+            </if>
+        </where>
+    </select>
+
+    <select id="exits" resultType="boolean">
+        select count(1) from daily where dt = #{dt} and code = #{code}
+    </select>
+
+    <select id="getDailyList" resultMap="DailyMap">
+        select * from daily where code = #{code}
+        <if test="dt != null">
+            and dt > #{dt}
+        </if>
+        order by dt ASC
+    </select>
+
+    <select id="countDaily" resultType="int">
+        select count(1) from daily
+        <where>
+            <if test="dt != null">
+                and dt = #{dt}
+            </if>
+            <if test="code != null">
+                and code = #{code}
+            </if>
+        </where>
+    </select>
+
+
+    <insert id="saveDaily">
+        insert into daily (code, max,min,open,close,trx_total,trx_amt,amplitude,trx_per,pe_ratio,total,dt,change_p)
+        values (#{code}, #{max},#{min},#{open},#{close},#{trxTotal},#{trxAmt},#{amplitude}
+        ,#{trxPer},#{peRatio},#{total},#{dt},#{changeP})
+    </insert>
+
+    <update id="updateStock">
+        UPDATE code SET
+        weight = #{weight}
+        <where>
+            <if test="code != null">
+                code = #{code}
+            </if>
+        </where>
+    </update>
+
+    <delete id="delete">
+        delete from code
+        <where>
+            <if test="code != null">
+                code = #{code}
+            </if>
+            <if test=" dt != null">
+                dt = #{dt}
+            </if>
+        </where>
+    </delete>
+
+</mapper>
