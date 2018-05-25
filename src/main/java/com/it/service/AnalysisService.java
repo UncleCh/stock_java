@@ -5,6 +5,9 @@ import com.it.bean.AnalysisTrend;
 import com.it.bean.Stock;
 import com.it.repository.AnalysisTrendMapper;
 import com.it.repository.StockMapper;
+import org.apache.commons.collections.MapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,7 @@ public class AnalysisService {
 
     @Autowired
     StockService stockService;
+    private Logger logger = LoggerFactory.getLogger(AnalysisService.class);
 
     public void analysis() {
         //统计股票表 行业 - 行业数量
@@ -94,6 +98,15 @@ public class AnalysisService {
         List<AnalysisTrend> trendList = trendMapper.getAnalysisTrendList(0.2, "UP");
         Map<String, List<AnalysisTrend>> groupByCode = trendList.stream().collect(Collectors.groupingBy(AnalysisTrend::getCode));
         // 行情分析  1 求时间的交集  2  成交量确认
+        if (MapUtils.isEmpty(groupByCode) || groupByCode.size() == 1) {
+            logger.info("趋势数据不满足分析条件 {}", groupByCode);
+        }
+        trendIntersection(groupByCode);
+
+    }
+    //求交集
+    private void trendIntersection(Map<String, List<AnalysisTrend>> groupByCode) {
+
 
     }
 
