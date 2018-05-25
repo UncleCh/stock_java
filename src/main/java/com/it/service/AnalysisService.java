@@ -104,9 +104,35 @@ public class AnalysisService {
         trendIntersection(groupByCode);
 
     }
-    //求交集
-    private void trendIntersection(Map<String, List<AnalysisTrend>> groupByCode) {
 
+    /**
+     * 获取除指定代码外，其他所有的趋势
+     *
+     * @param code
+     * @param groupByCode
+     * @return
+     */
+    private List<AnalysisTrend> getOtherTrend(String code, Map<String, List<AnalysisTrend>> groupByCode) {
+        List<AnalysisTrend> result = new LinkedList<>();
+        groupByCode.forEach(new BiConsumer<String, List<AnalysisTrend>>() {
+            @Override
+            public void accept(String s, List<AnalysisTrend> analysisTrends) {
+                if (!s.equals(code)) {
+                    result.addAll(analysisTrends);
+                }
+            }
+        });
+        return result;
+    }
+
+    //求交集  https://blog.csdn.net/leegoowang/article/details/72084667
+    private void trendIntersection(Map<String, List<AnalysisTrend>> groupByCode) {
+        for (String code : groupByCode.keySet()) {
+            for (AnalysisTrend trend : groupByCode.get(code)) {
+                List<AnalysisTrend> otherTrend = getOtherTrend(code, groupByCode);
+
+            }
+        }
 
     }
 
