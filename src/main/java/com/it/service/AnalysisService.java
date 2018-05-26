@@ -114,12 +114,9 @@ public class AnalysisService {
      */
     private List<AnalysisTrend> getOtherTrend(String code, Map<String, List<AnalysisTrend>> groupByCode) {
         List<AnalysisTrend> result = new LinkedList<>();
-        groupByCode.forEach(new BiConsumer<String, List<AnalysisTrend>>() {
-            @Override
-            public void accept(String s, List<AnalysisTrend> analysisTrends) {
-                if (!s.equals(code)) {
-                    result.addAll(analysisTrends);
-                }
+        groupByCode.forEach((s, analysisTrends) -> {
+            if (!s.equals(code)) {
+                result.addAll(analysisTrends);
             }
         });
         return result;
@@ -129,11 +126,21 @@ public class AnalysisService {
     private void trendIntersection(Map<String, List<AnalysisTrend>> groupByCode) {
         for (String code : groupByCode.keySet()) {
             for (AnalysisTrend trend : groupByCode.get(code)) {
-                List<AnalysisTrend> otherTrend = getOtherTrend(code, groupByCode);
 
             }
         }
 
+    }
+
+    private List<Map<String, Long>> getOverlap(String code, AnalysisTrend analysisTrend, Map<String, List<AnalysisTrend>> groupByCode) {
+        List<AnalysisTrend> otherTrend = getOtherTrend(code, groupByCode);
+        for (AnalysisTrend trend : otherTrend) {
+            //出现重叠的2种情况
+            if ((analysisTrend.getStartDtTime() >= trend.getStartDtTime() && analysisTrend.getStartDtTime() <= trend.getEndDtTime())
+                    || analysisTrend.getEndDtTime() >= trend.getStartDtTime() && analysisTrend.getEndDtTime() <= trend.getEndDtTime()) {
+
+            }
+        }
     }
 
     static class DailyIndustry {

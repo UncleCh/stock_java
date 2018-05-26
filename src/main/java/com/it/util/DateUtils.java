@@ -44,6 +44,9 @@ public class DateUtils {
     public static Date getCurDate() {
         return getCurDate("yyyy-MM-dd", new Date());
     }
+    public static Date parse(String date) {
+        return parse("yyyy-MM-dd", date);
+    }
 
     public static Date parse(String dateFormat, String dateStr) {
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);

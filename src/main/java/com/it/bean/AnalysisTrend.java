@@ -1,5 +1,7 @@
 package com.it.bean;
 
+import com.it.util.DateUtils;
+
 public class AnalysisTrend {
     private String id;
 
@@ -79,5 +81,12 @@ public class AnalysisTrend {
 
     public void setMin(double min) {
         this.min = min;
+    }
+
+    public long getStartDtTime() {
+        return DateUtils.parse(getStartDt()).getTime();
+    }
+    public long getEndDtTime() {
+        return DateUtils.parse(getEndDt()).getTime();
     }
 }
