@@ -23,6 +23,11 @@ public class DateUtils {
         }
     }
 
+    public static String toSystemDate(Date date) {
+        return sys.format(date);
+    }
+
+
     public static int distanceDays(String startDate, String endDate) {
         LocalDate startLocal = LocalDate.parse(startDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         LocalDate endLocal = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -44,6 +49,7 @@ public class DateUtils {
     public static Date getCurDate() {
         return getCurDate("yyyy-MM-dd", new Date());
     }
+
     public static Date parse(String date) {
         return parse("yyyy-MM-dd", date);
     }

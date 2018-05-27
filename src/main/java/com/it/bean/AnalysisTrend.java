@@ -89,4 +89,18 @@ public class AnalysisTrend {
     public long getEndDtTime() {
         return DateUtils.parse(getEndDt()).getTime();
     }
+
+    @Override
+    public String toString() {
+        return "AnalysisTrend{" +
+                "id='" + id + '\'' +
+                ", code='" + code + '\'' +
+                ", trend='" + trend + '\'' +
+                ", startDt='" + startDt + '\'' +
+                ", endDt='" + endDt + '\'' +
+                ", wave=" + wave +
+                ", max=" + max +
+                ", min=" + min +
+                '}';
+    }
 }

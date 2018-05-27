@@ -3,8 +3,10 @@ package com.it.service;
 import com.alibaba.fastjson.JSONObject;
 import com.it.bean.AnalysisTrend;
 import com.it.bean.Stock;
+import com.it.bean.analysis.OverlapTrend;
 import com.it.repository.AnalysisTrendMapper;
 import com.it.repository.StockMapper;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -124,23 +124,75 @@ public class AnalysisService {
 
     //求交集  https://blog.csdn.net/leegoowang/article/details/72084667
     private void trendIntersection(Map<String, List<AnalysisTrend>> groupByCode) {
+        Set<OverlapTrend> alls = new HashSet<>();
         for (String code : groupByCode.keySet()) {
             for (AnalysisTrend trend : groupByCode.get(code)) {
-
+                alls.addAll(getOverlap(code, trend, groupByCode));
             }
+        }
+        logger.info("分析完成 :{}",alls);
+        while (CollectionUtils.isNotEmpty(alls)) {
+            alls = getOverlapTrend(alls);
+            logger.info("分析:{}", alls);
+        }
+        logger.info("分析结果:{}", alls);
+    }
+
+    private Set<OverlapTrend> getOverlapTrend(Set<OverlapTrend> alls) {
+        Set<OverlapTrend> allBack = new HashSet<>(alls);
+        removeFirst(allBack);
+        Set<OverlapTrend> result = new HashSet<>();
+        for (OverlapTrend temp : alls) {
+            for (OverlapTrend compare : allBack) {
+                if ((temp.getStartTime() >= compare.getStartTime() && temp.getStartTime() <= compare.getEndTime())
+                        || temp.getEndTime() >= compare.getStartTime() && temp.getEndTime() <= compare.getEndTime()) {
+                    long startTime = Math.max(temp.getStartTime(), compare.getStartTime());
+                    long endTime = Math.min(temp.getEndTime(), temp.getEndTime());
+                    OverlapTrend overlapTrend = new OverlapTrend();
+                    overlapTrend.setStartTime(startTime);
+                    overlapTrend.setEndTime(endTime);
+                    overlapTrend.getCodes().addAll(temp.getCodes());
+                    overlapTrend.getCodes().addAll(compare.getCodes());
+
+                    result.add(overlapTrend);
+                }
+            }
+            removeFirst(allBack);
+        }
+        return result;
+    }
+
+    private void removeFirst(Set<OverlapTrend> allBack) {
+        Iterator<OverlapTrend> iterator = allBack.iterator();
+        if (iterator.hasNext()){
+            iterator.next();
+            iterator.remove();
         }
 
     }
 
-    private List<Map<String, Long>> getOverlap(String code, AnalysisTrend analysisTrend, Map<String, List<AnalysisTrend>> groupByCode) {
+    private List<OverlapTrend> getOverlap(String code, AnalysisTrend analysisTrend, Map<String, List<AnalysisTrend>> groupByCode) {
+        List<OverlapTrend> result = new LinkedList<>();
         List<AnalysisTrend> otherTrend = getOtherTrend(code, groupByCode);
+
         for (AnalysisTrend trend : otherTrend) {
             //出现重叠的2种情况
             if ((analysisTrend.getStartDtTime() >= trend.getStartDtTime() && analysisTrend.getStartDtTime() <= trend.getEndDtTime())
                     || analysisTrend.getEndDtTime() >= trend.getStartDtTime() && analysisTrend.getEndDtTime() <= trend.getEndDtTime()) {
-
+                long startTime = Math.max(analysisTrend.getStartDtTime(), trend.getStartDtTime());
+                long endTime = Math.min(analysisTrend.getEndDtTime(), trend.getEndDtTime());
+                OverlapTrend overlapTrend = new OverlapTrend();
+                overlapTrend.setStartTime(startTime);
+                overlapTrend.setEndTime(endTime);
+                overlapTrend.setTrendIds(Arrays.asList(analysisTrend.getId(), trend.getId()));
+                overlapTrend.setLeft(trend);
+                overlapTrend.setRight(analysisTrend);
+                overlapTrend.addCode(trend.getCode());
+                overlapTrend.addCode(analysisTrend.getCode());
+                result.add(overlapTrend);
             }
         }
+        return result;
     }
 
     static class DailyIndustry {
