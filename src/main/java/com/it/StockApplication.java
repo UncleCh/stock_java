@@ -86,18 +86,6 @@ public class StockApplication implements CommandLineRunner {
         temp.setObserverIndustry("稀土板块");
         temp.setName("北方稀土");
         stockList.add(temp);
-        Stock temp1 = new Stock();
-        temp1.setCode("002842");
-        temp1.setRemark("大国博弈加剧，配置具备战略属性的稀土、钨板块投资机会");
-        temp1.setObserverIndustry("稀土板块");
-        temp1.setName("翔鹭钨业");
-        stockList.add(temp1);
-        Stock temp2 = new Stock();
-        temp2.setCode("600392");
-        temp2.setRemark("大国博弈加剧，配置具备战略属性的稀土、钨板块投资机会");
-        temp2.setObserverIndustry("稀土板块");
-        temp2.setName("盛和资源");
-        stockList.add(temp2);
         stockService.collectStockBasic(stockList);
         for (Stock tempStock : stockList) {
             stockService.collectHistory(tempStock);
