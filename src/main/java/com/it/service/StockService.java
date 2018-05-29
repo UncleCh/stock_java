@@ -11,7 +11,6 @@ import com.it.repository.FinanceMapper;
 import com.it.repository.StockMapper;
 import com.it.util.Constant;
 import com.it.util.DateUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -81,7 +80,8 @@ public class StockService {
 
 
     public void analysisStock(Stock temp) {
-        List<Daily> dailyList = dailyMapper.getDailyList(temp.getCode(), "2017-06-20");
+        AnalysisTrend desc = trendMapper.getOne("desc",temp.getCode());
+        List<Daily> dailyList = dailyMapper.getDailyList(temp.getCode(), desc == null ? null : desc.getEndDt());
         AnalysisTrendModel sortList = new AnalysisTrendModel();
         AnalysisTrend curTrend = null;
         for (Daily daily : dailyList) {
@@ -132,6 +132,7 @@ public class StockService {
         analysisTrend.setWave(sortList.getWave());
         analysisTrend.setMax(sortList.getMax().getMax());
         analysisTrend.setMin(sortList.getMin().getMin());
+        analysisTrend.setObserverIndustry(temp.getObserverIndustry());
         return analysisTrend;
     }
 
@@ -208,7 +209,7 @@ public class StockService {
                     concepts.add(a);
                 }
                 temp.setConcept(JSONObject.toJSONString(concepts));
-                if(temp.getDt() == null)
+                if (temp.getDt() == null)
                     temp.setDt(new Date());
                 if (stock == null)
                     stockMapper.saveStock(temp);

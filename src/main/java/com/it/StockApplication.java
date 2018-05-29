@@ -62,7 +62,7 @@ public class StockApplication implements CommandLineRunner {
 //
 //
 //        }
-        analysisService.analysisIndustryTrend();
+        analysisService.analysisIndustryTrend("稀土板块");
 //        stockService.multiCollectStock();
 //        addAnalysis();
     }

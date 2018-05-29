@@ -22,6 +22,9 @@
             <if test="observerIndustry != null">
                 and observer_industry = #{observerIndustry}
             </if>
+            <if test="dt != null">
+                and dt >= #{dt}
+            </if>
         </where>
     </select>
 

@@ -19,6 +19,8 @@ public class AnalysisTrend {
 
     private double min;
 
+    private String observerIndustry;
+
     public String getId() {
         return id;
     }
@@ -88,6 +90,14 @@ public class AnalysisTrend {
     }
     public long getEndDtTime() {
         return DateUtils.parse(getEndDt()).getTime();
+    }
+
+    public String getObserverIndustry() {
+        return observerIndustry;
+    }
+
+    public void setObserverIndustry(String observerIndustry) {
+        this.observerIndustry = observerIndustry;
     }
 
     @Override
