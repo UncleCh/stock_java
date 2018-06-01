@@ -12,9 +12,8 @@ public class OverlapTrend {
     private long startTime;
     private long endTime;
     private List<String> trendIds;
-    private AnalysisTrend left;
-    private AnalysisTrend right;
     private Set<String> codes = new HashSet<>();
+    private Set<AnalysisTrend> trends = new HashSet<>();
 
     public long getStartTime() {
         return startTime;
@@ -40,22 +39,6 @@ public class OverlapTrend {
         this.trendIds = trendIds;
     }
 
-    public AnalysisTrend getLeft() {
-        return left;
-    }
-
-    public void setLeft(AnalysisTrend left) {
-        this.left = left;
-    }
-
-    public AnalysisTrend getRight() {
-        return right;
-    }
-
-    public void setRight(AnalysisTrend right) {
-        this.right = right;
-    }
-
     public Set<String> getCodes() {
         return codes;
     }
@@ -66,6 +49,10 @@ public class OverlapTrend {
 
     public void addCode(String code) {
         this.codes.add(code);
+    }
+
+    public void addTrend(AnalysisTrend analysisTrend) {
+        trends.add(analysisTrend);
     }
 
     @Override

@@ -20,7 +20,7 @@
                 and trend = #{trend}
             </if>
             <if test="industry != null">
-                and industry = #{industry}
+                and observer_industry = #{industry}
             </if>
         </where>
     </select>
@@ -33,7 +33,7 @@
                 code = #{code}
             </if>
         </where>
-        order by end_dt #{sort} limit 1
+        order by end_dt desc limit 1
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">

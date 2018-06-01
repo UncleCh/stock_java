@@ -89,29 +89,33 @@ public class AnalysisService {
     }
 
 
-
     public void analysisIndustryTrend(String industry) {
 
         List<AnalysisTrend> trendList = trendMapper.getAnalysisTrendList(0.2, "UP", industry);
-        Map<String, List<AnalysisTrend>> groupByCode = trendList.stream().collect(Collectors.groupingBy(AnalysisTrend::getCode));
-        // 行情分析  1 求时间的交集  2  成交量确认
-        if (MapUtils.isEmpty(groupByCode) || groupByCode.size() == 1) {
-            logger.info("趋势数据不满足分析条件 {}", groupByCode);
-        }
-        //求交集
-        Set<OverlapTrend> alls = new HashSet<>();
-        for (String code : groupByCode.keySet()) {
-            for (AnalysisTrend trend : groupByCode.get(code)) {
-                alls.addAll(getOverlap(code, trend, groupByCode));
+        Map<String, List<AnalysisTrend>> groupByYear = trendList.stream().collect(Collectors.groupingBy(o -> o.getStartDt().substring(2, 4)));
+        for (Map.Entry<String, List<AnalysisTrend>> listEntry : groupByYear.entrySet()) {
+            Map<String, List<AnalysisTrend>> groupByCode = listEntry.getValue().stream().collect(Collectors.groupingBy(AnalysisTrend::getCode));
+            // 行情分析  1 求时间的交集  2  成交量确认
+            if (MapUtils.isEmpty(groupByCode) || groupByCode.size() == 1) {
+                logger.info("{} 年 {} 行业 趋势数据不满足分析条件 {}", listEntry.getKey(), industry, groupByCode);
+                continue;
             }
+            //求交集
+            Set<OverlapTrend> alls = new HashSet<>();
+            for (String code : groupByCode.keySet()) {
+                for (AnalysisTrend trend : groupByCode.get(code)) {
+                    alls.addAll(getOverlap(code, trend, groupByCode));
+                }
+            }
+            logger.info("{} 年 {} 行业 股票相同趋势 首次分析完成 :{}", listEntry.getKey(), industry, alls);
+            Set<OverlapTrend> result = null;
+            while (CollectionUtils.isNotEmpty(alls)) {
+                if (CollectionUtils.isNotEmpty(alls))
+                    result = alls;
+                alls = getOverlapTrend(alls);
+            }
+            logger.info("{} 年 {} 行业 分析结果:{}", listEntry.getKey(), industry, result);
         }
-        logger.info("分析完成 :{}", alls);
-        while (CollectionUtils.isNotEmpty(alls)) {
-            alls = getOverlapTrend(alls);
-            logger.info("分析:{}", alls);
-        }
-        logger.info("分析结果:{}", alls);
-
     }
 
     /**
@@ -195,8 +199,8 @@ public class AnalysisService {
                 overlapTrend.setStartTime(startTime);
                 overlapTrend.setEndTime(endTime);
                 overlapTrend.setTrendIds(Arrays.asList(analysisTrend.getId(), trend.getId()));
-                overlapTrend.setLeft(trend);
-                overlapTrend.setRight(analysisTrend);
+                overlapTrend.addTrend(trend);
+                overlapTrend.addTrend(analysisTrend);
                 overlapTrend.addCode(trend.getCode());
                 overlapTrend.addCode(analysisTrend.getCode());
                 result.add(overlapTrend);
