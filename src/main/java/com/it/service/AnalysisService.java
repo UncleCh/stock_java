@@ -1,11 +1,16 @@
 package com.it.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.it.bean.AnalysisTrend;
+import com.it.bean.Daily;
 import com.it.bean.Stock;
 import com.it.bean.analysis.OverlapTrend;
 import com.it.repository.AnalysisTrendMapper;
+import com.it.repository.DailyMapper;
+import com.it.repository.OverlapTrendMapper;
 import com.it.repository.StockMapper;
+import com.it.util.DateUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
@@ -28,6 +33,10 @@ public class AnalysisService {
     private StockMapper stockMapper;
     @Autowired
     private AnalysisTrendMapper trendMapper;
+    @Autowired
+    private OverlapTrendMapper overlapTrendMapper;
+    @Autowired
+    private DailyMapper dailyMapper;
 
     @Autowired
     StockService stockService;
@@ -100,6 +109,7 @@ public class AnalysisService {
                 logger.info("{} 年 {} 行业 趋势数据不满足分析条件 {}", listEntry.getKey(), industry, groupByCode);
                 continue;
             }
+            logger.info("{} 年 {} 行业 股票相同趋势 参与分析的股票 :{}", listEntry.getKey(), industry, groupByCode.keySet());
             //求交集
             Set<OverlapTrend> alls = new HashSet<>();
             for (String code : groupByCode.keySet()) {
@@ -113,6 +123,14 @@ public class AnalysisService {
                 if (CollectionUtils.isNotEmpty(alls))
                     result = alls;
                 alls = getOverlapTrend(alls);
+            }
+            if (result == null) {
+                logger.info("{} 年 {} 行业 未出现一致性趋势", listEntry.getKey(), industry);
+                continue;
+            }
+            for (OverlapTrend temp : result) {
+                temp.setIndustry(industry);
+                overlapTrendMapper.saveOverlapTrend(temp);
             }
             logger.info("{} 年 {} 行业 分析结果:{}", listEntry.getKey(), industry, result);
         }
@@ -167,7 +185,8 @@ public class AnalysisService {
                     overlapTrend.setEndTime(endTime);
                     overlapTrend.getCodes().addAll(temp.getCodes());
                     overlapTrend.getCodes().addAll(compare.getCodes());
-
+                    overlapTrend.getTrends().addAll(temp.getTrends());
+                    overlapTrend.getTrends().addAll(compare.getTrends());
                     result.add(overlapTrend);
                 }
             }
@@ -198,7 +217,6 @@ public class AnalysisService {
                 OverlapTrend overlapTrend = new OverlapTrend();
                 overlapTrend.setStartTime(startTime);
                 overlapTrend.setEndTime(endTime);
-                overlapTrend.setTrendIds(Arrays.asList(analysisTrend.getId(), trend.getId()));
                 overlapTrend.addTrend(trend);
                 overlapTrend.addTrend(analysisTrend);
                 overlapTrend.addCode(trend.getCode());
@@ -207,6 +225,79 @@ public class AnalysisService {
             }
         }
         return result;
+    }
+
+    public void analysisTrend(String industry) {
+        OverlapTrend queryParam = new OverlapTrend();
+        queryParam.setIndustry(industry);
+        List<OverlapTrend> overlapTrend = overlapTrendMapper.getOverlapTrend(queryParam);
+        for (OverlapTrend temp : overlapTrend) {
+            List<AnalysisTrend> trendIds = JSONArray.parseArray(temp.getTrendIds(), String.class).stream()
+                    .map(s -> trendMapper.getAnalysisTrend(s)).collect(Collectors.toList());
+            AnalysisTrend min = null, secondMin = null;
+            for (AnalysisTrend analysisTrend : trendIds) {
+                if (min == null) {
+                    min = analysisTrend;
+                }
+                if (analysisTrend.getStartDtTime() < min.getStartDtTime()) {
+                    min = analysisTrend;
+                    secondMin = min;
+                } else if (secondMin == null) {
+                    secondMin = analysisTrend;
+                }
+                if (analysisTrend.getStartDtTime() < secondMin.getStartDtTime() &&
+                        !min.equals(analysisTrend)) {
+                    secondMin = analysisTrend;
+                }else if(analysisTrend.getStartDtTime() == secondMin.getStartDtTime() && min.equals(secondMin)){
+                    secondMin = analysisTrend;
+                }
+
+
+
+            }
+
+            //最早 趋势同步时间
+            long max = Math.max(min.getStartDtTime(), secondMin.getStartDtTime());
+            //个股放量时间
+            List<Daily> dailyList = dailyMapper.getDailyList(min.getCode(), min.getStartDt());
+            Daily biggerDaily = getTrendAmtBigger(dailyList);
+            if (biggerDaily != null)
+                logger.info("最早 趋势同步时间 {} code {} 放量时间 {}", DateUtils.toSystemDate(new Date(max)), biggerDaily.getCode(), DateUtils.toSystemDate(biggerDaily.getDt()));
+            dailyList = dailyMapper.getDailyList(secondMin.getCode(), secondMin.getStartDt());
+            biggerDaily = getTrendAmtBigger(dailyList);
+            if (biggerDaily != null)
+                logger.info("code {} 放量时间 {}", biggerDaily.getCode(), DateUtils.toSystemDate(biggerDaily.getDt()));
+
+        }
+        System.out.println(1);
+
+    }
+
+    private Daily getTrendAmtBigger(List<Daily> dailyList) {
+        Daily daily = null;
+        int countDays = 0, appendDays = 0;
+        for (Daily temp : dailyList) {
+            if (daily == null)
+                daily = temp;
+            else {
+                long trxAmtDouble = Long.parseLong(daily.getTrxAmt()) / Long.parseLong(temp.getTrxAmt());
+                countDays = countDays + 1;
+                if (trxAmtDouble >= 2) {
+                    appendDays = appendDays + 1;
+                }
+
+                if (countDays == 5) {
+                    if (appendDays >= 3)
+                        return temp;
+                    else {
+                        countDays = 0;
+                        appendDays = 0;
+                    }
+                }
+            }
+
+        }
+        return null;
     }
 
     static class DailyIndustry {

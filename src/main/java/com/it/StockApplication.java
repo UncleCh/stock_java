@@ -31,7 +31,7 @@ public class StockApplication implements CommandLineRunner {
 
     public void run(String... strings) throws Exception {
 //        analysisService.analysis("稀土板块");
-        analysisService.analysisIndustryTrend("稀土板块");
+        analysisService.analysisTrend("稀土板块");
 //        stockService.multiCollectStock();
 //        addAnalysis();
     }

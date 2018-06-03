@@ -1,9 +1,15 @@
 package com.it.bean.analysis;
 
+import com.alibaba.fastjson.JSONObject;
 import com.it.bean.AnalysisTrend;
 import com.it.util.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 趋势一致性
@@ -11,7 +17,11 @@ import java.util.*;
 public class OverlapTrend {
     private long startTime;
     private long endTime;
-    private List<String> trendIds;
+    private String trendIds;
+    private String industry;
+    private Date startDt;
+    private Date endDt;
+
     private Set<String> codes = new HashSet<>();
     private Set<AnalysisTrend> trends = new HashSet<>();
 
@@ -20,6 +30,7 @@ public class OverlapTrend {
     }
 
     public void setStartTime(long startTime) {
+        startDt = new Date(startTime);
         this.startTime = startTime;
     }
 
@@ -28,16 +39,10 @@ public class OverlapTrend {
     }
 
     public void setEndTime(long endTime) {
+        endDt = new Date(endTime);
         this.endTime = endTime;
     }
 
-    public List<String> getTrendIds() {
-        return trendIds;
-    }
-
-    public void setTrendIds(List<String> trendIds) {
-        this.trendIds = trendIds;
-    }
 
     public Set<String> getCodes() {
         return codes;
@@ -52,7 +57,49 @@ public class OverlapTrend {
     }
 
     public void addTrend(AnalysisTrend analysisTrend) {
+        industry = analysisTrend.getObserverIndustry();
         trends.add(analysisTrend);
+    }
+
+    public Set<AnalysisTrend> getTrends() {
+        return trends;
+    }
+
+    public void setTrends(Set<AnalysisTrend> trends) {
+        this.trends = trends;
+    }
+
+    public String getTrendIds() {
+        return StringUtils.isNotEmpty(trendIds) ?
+                trendIds : JSONObject.toJSONString(trends.stream().map(AnalysisTrend::getId).collect(Collectors.toList()));
+    }
+
+    public void setTrendIds(String trendIds) {
+        this.trendIds = trendIds;
+    }
+
+    public String getIndustry() {
+        return industry;
+    }
+
+    public void setIndustry(String industry) {
+        this.industry = industry;
+    }
+
+    public Date getStartDt() {
+        return startDt;
+    }
+
+    public void setStartDt(Date startDt) {
+        this.startDt = startDt;
+    }
+
+    public Date getEndDt() {
+        return endDt;
+    }
+
+    public void setEndDt(Date endDt) {
+        this.endDt = endDt;
     }
 
     @Override
@@ -72,10 +119,10 @@ public class OverlapTrend {
 
     @Override
     public String toString() {
-        return "OverlapTrend{" +
+        return "\n OverlapTrend{" +
                 "startTime=" + DateUtils.toSystemDate(new Date(startTime)) +
                 ", endTime=" + DateUtils.toSystemDate(new Date(endTime))
-                + "codes " + codes +
+                + "codes " + trends +
                 '}';
     }
 }

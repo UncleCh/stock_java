@@ -4,7 +4,7 @@
     <resultMap id="BaseResultMap" type="com.it.bean.AnalysisTrend"/>
 
 
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    <select id="getAnalysisTrend" resultMap="BaseResultMap" >
         select * from analysis_trend
         where id = #{id}
     </select>

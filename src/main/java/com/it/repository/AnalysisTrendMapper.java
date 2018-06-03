@@ -16,4 +16,6 @@ public interface AnalysisTrendMapper {
     List<AnalysisTrend> getAnalysisTrendList(@Param("wave") double wave, @Param("trend") String trend, @Param("industry")String industry);
 
     AnalysisTrend getOne(@Param("sort") String sort,@Param("code") String code);
+
+    AnalysisTrend getAnalysisTrend(String id);
 }

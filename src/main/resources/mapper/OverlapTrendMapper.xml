@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.it.repository.OverlapTrendMapper">
+    <resultMap id="BaseResultMap" type="com.it.bean.analysis.OverlapTrend"/>
+
+
+    <select id="getOverlapTrend" resultMap="BaseResultMap">
+        select * from  overlap_trend  where industry = #{industry}
+    </select>
+
+
+    <insert id="saveOverlapTrend">
+      insert into overlap_trend (start_time, end_time,trend_ids,industry)
+      values(#{startDt},#{endDt},#{trendIds},#{industry})
+    </insert>
+
+
+</mapper>
