@@ -45,6 +45,8 @@ public class StockService {
     private StockMapper stockMapper;
     @Autowired
     private AnalysisTrendMapper trendMapper;
+    @Autowired
+    private AnalysisTrendService analysisTrendService;
     private Logger logger = LoggerFactory.getLogger(StockService.class);
 
     ExecutorService executorService = Executors.newFixedThreadPool(1);
@@ -80,61 +82,13 @@ public class StockService {
 
 
     public void analysisStock(Stock temp) {
-        AnalysisTrend desc = trendMapper.getOne("desc",temp.getCode());
-        List<Daily> dailyList = dailyMapper.getDailyList(temp.getCode(), desc == null ? null : desc.getEndDt());
-        AnalysisTrendModel sortList = new AnalysisTrendModel();
-        AnalysisTrend curTrend = null;
-        for (Daily daily : dailyList) {
-            try {
-                boolean trend = sortList.add(daily);
-                if (trend) {
-                    AnalysisTrend analysisTrend = getAnalysisTrend(temp, sortList);
-                    if (curTrend != null) {
-                        if (curTrend.getTrend().equals(analysisTrend.getTrend())) {
-                            Date curEndDate = DateUtils.parse("yyyy-MM-dd", curTrend.getEndDt());
-                            Date analysisStartDate = DateUtils.parse("yyyy-MM-dd", analysisTrend.getStartDt());
-                            if ((analysisStartDate.getTime() - curEndDate.getTime()) <= (86400000 * 5)) {
-                                curTrend = analysisTrend;
-                                continue;
-                            } else {
-                                trendMapper.saveAnalysisTrend(analysisTrend);
-                                sortList.clear();
-                            }
-                        } else {
-                            trendMapper.saveAnalysisTrend(analysisTrend);
-                            sortList.clear();
-                        }
-                    }
-                    curTrend = analysisTrend;
-
-                }
-            } catch (Exception e) {
-                if (e instanceof ReverseTrendException) {
-                    AnalysisTrend analysisTrend = getAnalysisTrend(temp, sortList);
-                    trendMapper.saveAnalysisTrend(analysisTrend);
-                    sortList.clear();
-                    logger.info("趋势反转:{}", e.getMessage());
-                }
-
-            }
-
-        }
+        AnalysisTrend desc = trendMapper.getOne("desc", temp.getCode());
+        List<Daily> dailyList = dailyMapper.getDailyList(temp.getCode(),
+                desc == null ? null : desc.getStartDt(), desc == null ? null : desc.getEndDt());
+        analysisTrendService.analysisTrendAndSave(temp,dailyList);
     }
 
-    private AnalysisTrend getAnalysisTrend(Stock temp, AnalysisTrendModel sortList) {
-        AnalysisTrend analysisTrend = new AnalysisTrend();
-        analysisTrend.setCode(temp.getCode());
-        analysisTrend.setTrend(sortList.getCurTrend().toString());
-        String start = DateUtils.sys.format(sortList.getStart().getDt());
-        analysisTrend.setStartDt(start);
-        String end = DateUtils.sys.format(sortList.getEnd().getDt());
-        analysisTrend.setEndDt(end);
-        analysisTrend.setWave(sortList.getWave());
-        analysisTrend.setMax(sortList.getMax().getMax());
-        analysisTrend.setMin(sortList.getMin().getMin());
-        analysisTrend.setObserverIndustry(temp.getObserverIndustry());
-        return analysisTrend;
-    }
+
 
     private void collectDaily(WebDriver webDriver, Stock temp) {
         Daily daily = new Daily();

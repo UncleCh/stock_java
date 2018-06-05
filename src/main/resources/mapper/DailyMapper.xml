@@ -26,6 +26,9 @@
         <if test="dt != null">
             and dt > #{dt}
         </if>
+        <if test="endDt != null">
+            <![CDATA[and dt <= #{endDt} ]]>
+        </if>
         order by dt ASC
     </select>
 

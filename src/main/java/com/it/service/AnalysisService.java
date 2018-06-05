@@ -37,6 +37,8 @@ public class AnalysisService {
     private OverlapTrendMapper overlapTrendMapper;
     @Autowired
     private DailyMapper dailyMapper;
+    @Autowired
+    private AnalysisTrendService analysisTrendService;
 
     @Autowired
     StockService stockService;
@@ -235,23 +237,24 @@ public class AnalysisService {
             List<AnalysisTrend> trendIds = JSONArray.parseArray(temp.getTrendIds(), String.class).stream()
                     .map(s -> trendMapper.getAnalysisTrend(s)).collect(Collectors.toList());
             AnalysisTrend min = null, secondMin = null;
-            for (AnalysisTrend analysisTrend : trendIds) {
+            Iterator<AnalysisTrend> iterator = trendIds.iterator();
+            while (iterator.hasNext()) {
+                AnalysisTrend analysisTrend = iterator.next();
                 if (min == null) {
                     min = analysisTrend;
+                    secondMin = analysisTrend;
                 }
                 if (analysisTrend.getStartDtTime() < min.getStartDtTime()) {
-                    min = analysisTrend;
                     secondMin = min;
-                } else if (secondMin == null) {
-                    secondMin = analysisTrend;
+                    min = analysisTrend;
                 }
                 if (analysisTrend.getStartDtTime() < secondMin.getStartDtTime() &&
                         !min.equals(analysisTrend)) {
                     secondMin = analysisTrend;
-                }else if(analysisTrend.getStartDtTime() == secondMin.getStartDtTime() && min.equals(secondMin)){
+                } else if (analysisTrend.getStartDtTime() == secondMin.getStartDtTime()
+                        && min.equals(secondMin)) {
                     secondMin = analysisTrend;
                 }
-
 
 
             }
@@ -259,14 +262,38 @@ public class AnalysisService {
             //最早 趋势同步时间
             long max = Math.max(min.getStartDtTime(), secondMin.getStartDtTime());
             //个股放量时间
-            List<Daily> dailyList = dailyMapper.getDailyList(min.getCode(), min.getStartDt());
+            List<Daily> dailyList = dailyMapper.getDailyList(min.getCode(), min.getStartDt(), min.getEndDt());
             Daily biggerDaily = getTrendAmtBigger(dailyList);
-            if (biggerDaily != null)
-                logger.info("最早 趋势同步时间 {} code {} 放量时间 {}", DateUtils.toSystemDate(new Date(max)), biggerDaily.getCode(), DateUtils.toSystemDate(biggerDaily.getDt()));
-            dailyList = dailyMapper.getDailyList(secondMin.getCode(), secondMin.getStartDt());
-            biggerDaily = getTrendAmtBigger(dailyList);
-            if (biggerDaily != null)
-                logger.info("code {} 放量时间 {}", biggerDaily.getCode(), DateUtils.toSystemDate(biggerDaily.getDt()));
+            if (biggerDaily != null) {
+                Stock stock = new Stock();
+                stock.setCode(min.getCode());
+                stock.setObserverIndustry(min.getObserverIndustry());
+                List<AnalysisTrend> analysisTrends = analysisTrendService.analysisTrend(stock,
+                        dailyMapper.getDailyList(min.getCode(), DateUtils.toSystemDate(biggerDaily.getDt()), min.getEndDt()));
+                logger.info("最早 趋势同步时间 {} code {} 开始时间 {} 结束时间 {} 放量时间 {}",
+                        DateUtils.toSystemDate(new Date(max)), biggerDaily.getCode(), min.getStartDt(), min.getEndDt(),
+                        DateUtils.toSystemDate(biggerDaily.getDt()));
+                logger.info("总涨幅:{}放量后涨幅:{}", min.getWave(), analysisTrends.get(0).getWave());
+            } else
+                logger.info(" code {} 开始时间 {} 结束时间 {} 放量时间 {} 总涨幅:{} 没有符合条件的放量",
+                         min.getCode(),min.getStartDt(), min.getEndDt(),min.getWave());
+
+            List<Daily> secondDailyList = dailyMapper.getDailyList(secondMin.getCode(), secondMin.getStartDt(), secondMin.getEndDt());
+            Daily secondBiggerDaily = getTrendAmtBigger(secondDailyList);
+            if (secondBiggerDaily != null) {
+                Stock stock = new Stock();
+                stock.setCode(secondMin.getCode());
+                stock.setObserverIndustry(secondMin.getObserverIndustry());
+                logger.info("code {} 开始时间 {} 结束时间 {} 放量时间 {}", secondBiggerDaily.getCode(),
+                        secondMin.getStartDt(), secondMin.getEndDt(),
+                        DateUtils.toSystemDate(secondBiggerDaily.getDt()));
+                List<AnalysisTrend> analysisTrends = analysisTrendService.analysisTrend(stock,
+                        dailyMapper.getDailyList(secondMin.getCode(), DateUtils.toSystemDate(secondBiggerDaily.getDt()), secondMin.getEndDt()));
+                logger.info("总涨幅:{}放量后涨幅:{}", secondMin.getWave(), analysisTrends.get(0).getWave());
+            } else
+                logger.info("code {} 开始时间 {} 结束时间 {} 总涨幅:{}没有符合条件的放量",
+                        secondMin.getCode()
+                        ,secondMin.getStartDt(),secondMin.getEndDt(),secondMin.getWave());
 
         }
         System.out.println(1);
@@ -280,9 +307,9 @@ public class AnalysisService {
             if (daily == null)
                 daily = temp;
             else {
-                long trxAmtDouble = Long.parseLong(daily.getTrxAmt()) / Long.parseLong(temp.getTrxAmt());
+                long trxAmtDouble = Long.parseLong(temp.getTrxAmt()) / Long.parseLong(daily.getTrxAmt());
                 countDays = countDays + 1;
-                if (trxAmtDouble >= 2) {
+                if (trxAmtDouble >= 1.5) {
                     appendDays = appendDays + 1;
                 }
 
