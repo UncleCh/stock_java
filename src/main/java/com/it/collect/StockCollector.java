@@ -218,7 +218,7 @@ public class StockCollector {
     public List<Daily> collectStockHistory(Stock stock) throws IOException {
         String url = "http://www.aigaogao.com/tools/history.html?s=" + stock.getCode();
         Document document = Jsoup.connect(url).get();
-        Elements select = document.select("#ctl16_contentdiv > table > tbody >tr");
+        Elements select = document.select("table > tbody >tr");
         List<Daily> dailyList = new LinkedList<>();
         for (int i = 1; i <= select.size() - 1; i++) {
             Elements td = select.get(i).select("td");
@@ -265,6 +265,7 @@ public class StockCollector {
         String url = "http://vip.stock.finance.sina.com.cn/mkt/#new_ysjs";
         final WebDriver webDriver = new ChromeDriver();
         webDriver.get(url);
+        webDriver.findElement(By.xpath("//*[@id=\"tbl_wrap\"]/div/a[2]")).click();
 //        WebDriverWait wait = new WebDriverWait(webDriver, 20);
 //        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"tbl_wrap\"]/div/a[2]")));
         List<Stock> collectResult = new LinkedList<>();
@@ -273,21 +274,22 @@ public class StockCollector {
             Stock stock = new Stock();
             stock.setIndustry(industry);
             stock.setRemark("分析样本");
-            String name = webelement.findElement(By.xpath("th[1]/a")).getText();
-            if (name.contains("sh")) {
+            String code = webelement.findElement(By.xpath("th[1]/a")).getText();
+            if (code.contains("sh")) {
                 stock.setMarket("sh");
-                name = name.replace("sh", "").trim();
+                code = code.replace("sh", "").trim();
             } else {
                 stock.setMarket("sz");
-                name = name.replace("sz", "").trim();
+                code = code.replace("sz", "").trim();
             }
-            String code = webelement.findElement(By.xpath("th[2]/a")).getText();
+            String name = webelement.findElement(By.xpath("th[2]/a")).getText();
             stock.setCode(code);
             stock.setName(name);
             stock.setDt(new Date());
-//            Stock stock1 = stockMapper.getStock(stock.getCode(), null);
-//            if (stock1 == null)
-//                stockMapper.saveStock(stock);
+            stock.setObserverIndustry("稀土板块");
+            Stock stock1 = stockMapper.getStock(stock.getCode(), null);
+            if (stock1 == null)
+                stockMapper.saveStock(stock);
         }
         return collectResult;
     }

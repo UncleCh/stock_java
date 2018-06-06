@@ -15,5 +15,6 @@ public interface DailyMapper {
 
     int countDaily(Daily dt);
 
-    List<Daily> getDailyList(@Param("code") String code, @Param("dt") String startDt,@Param("endDt") String endDt);
+    List<Daily> getDailyList(@Param("code") String code, @Param("dt") String startDt,
+                             @Param("endDt") String endDt);
 }
