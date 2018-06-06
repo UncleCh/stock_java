@@ -1,8 +1,10 @@
 package com.it.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.it.ReverseTrendException;
-import com.it.bean.*;
+import com.it.bean.AnalysisTrend;
+import com.it.bean.Daily;
+import com.it.bean.Finance;
+import com.it.bean.Stock;
 import com.it.collect.ExcelCollector;
 import com.it.collect.StockCollector;
 import com.it.repository.AnalysisTrendMapper;
@@ -85,9 +87,8 @@ public class StockService {
         AnalysisTrend desc = trendMapper.getOne("desc", temp.getCode());
         List<Daily> dailyList = dailyMapper.getDailyList(temp.getCode(),
                 desc == null ? null : desc.getStartDt(), desc == null ? null : desc.getEndDt());
-        analysisTrendService.analysisTrendAndSave(temp,dailyList);
+        analysisTrendService.analysisTrendAndSave(temp, dailyList);
     }
-
 
 
     private void collectDaily(WebDriver webDriver, Stock temp) {
@@ -148,6 +149,8 @@ public class StockService {
         final WebDriver webDriver = new ChromeDriver();
         for (Stock temp : stocks) {
             Stock stock = stockMapper.getStock(temp.getCode(), null);
+            if (stock != null)
+                continue;
             String url = "https://www.iwencai.com/data-robot/extract-new?query=" + temp.getCode() +
                     "&querytype=stock&qsData=pc_~soniu~others~homepage~box~history&dataSource=hp_history";
             try {
@@ -165,10 +168,8 @@ public class StockService {
                 temp.setConcept(JSONObject.toJSONString(concepts));
                 if (temp.getDt() == null)
                     temp.setDt(new Date());
-                if (stock == null)
-                    stockMapper.saveStock(temp);
-                else
-                    stockMapper.updateStock(temp);
+                stockMapper.saveStock(temp);
+
             } catch (Exception e) {
                 logger.info(url, e);
             }

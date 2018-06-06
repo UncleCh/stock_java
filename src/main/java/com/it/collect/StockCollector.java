@@ -3,6 +3,7 @@ package com.it.collect;
 import com.it.bean.Daily;
 import com.it.bean.Finance;
 import com.it.bean.Stock;
+import com.it.repository.StockMapper;
 import com.it.util.Constant;
 import com.it.util.DateUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -11,11 +12,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.LinkedList;
@@ -254,4 +257,39 @@ public class StockCollector {
         }
         return dailyList;
     }
+
+    @Autowired
+    StockMapper stockMapper;
+
+    public List<Stock> catchIndustryCode(String industry) {
+        String url = "http://vip.stock.finance.sina.com.cn/mkt/#new_ysjs";
+        final WebDriver webDriver = new ChromeDriver();
+        webDriver.get(url);
+//        WebDriverWait wait = new WebDriverWait(webDriver, 20);
+//        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"tbl_wrap\"]/div/a[2]")));
+        List<Stock> collectResult = new LinkedList<>();
+        List<WebElement> elements = webDriver.findElements(By.xpath("//*[@id=\"tbl_wrap\"]/table/tbody/tr"));
+        for (WebElement webelement : elements) {
+            Stock stock = new Stock();
+            stock.setIndustry(industry);
+            stock.setRemark("分析样本");
+            String name = webelement.findElement(By.xpath("th[1]/a")).getText();
+            if (name.contains("sh")) {
+                stock.setMarket("sh");
+                name = name.replace("sh", "").trim();
+            } else {
+                stock.setMarket("sz");
+                name = name.replace("sz", "").trim();
+            }
+            String code = webelement.findElement(By.xpath("th[2]/a")).getText();
+            stock.setCode(code);
+            stock.setName(name);
+            stock.setDt(new Date());
+//            Stock stock1 = stockMapper.getStock(stock.getCode(), null);
+//            if (stock1 == null)
+//                stockMapper.saveStock(stock);
+        }
+        return collectResult;
+    }
+
 }
