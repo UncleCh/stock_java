@@ -12,4 +12,6 @@ public class Constant {
      * 数据类型为股票
      */
     public static final int STOCK = 2;
+
+    public static final long DAY = 86400000;
 }

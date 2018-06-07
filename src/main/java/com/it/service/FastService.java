@@ -33,7 +33,11 @@ public class FastService {
         queryParam.setIndustry(industry);
         List<Stock> stockList = stockMapper.getStockList(queryParam);
         for (Stock temp : stockList) {
-            stockService.collectHistory(temp);
+//            stockService.collectHistory(temp);
+//            List<Daily> dailyList = dailyMapper.getDailyList(temp.getCode(), null, null);
+//            analysisTrendService.analysisTrendAndSave(temp,dailyList);
+            industry = "稀土板块";
+            analysisTrendService.analysisIndustryTrend(industry);
         }
 //        List<Daily> dailyList = dailyMapper.getDailyList(null, null, null, industry);
 //        addAnalysis();
@@ -49,12 +53,6 @@ public class FastService {
         stock.setObserverIndustry("稀土板块");
         stock.setName("厦门钨业");
         stockList.add(stock);
-        Stock temp = new Stock();
-        temp.setCode("600111");
-        temp.setRemark("大国博弈加剧，配置具备战略属性的稀土、钨板块投资机会");
-        temp.setObserverIndustry("稀土板块");
-        temp.setName("北方稀土");
-        stockList.add(temp);
         stockService.collectStockBasic(stockList);
         for (Stock tempStock : stockList) {
             stockService.collectHistory(tempStock);
