@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,9 +30,9 @@ public class ExcelCollector {
                 String code = row.getCell(4).getStringCellValue();
                 String market = row.getCell(7).getStringCellValue();
                 Stock temp = new Stock();
-                if("SHH".equalsIgnoreCase(market)){
+                if ("SHH".equalsIgnoreCase(market)) {
                     temp.setMarket("sh");
-                }else{
+                } else {
                     temp.setMarket("sz");
                 }
                 String dt = row.getCell(0).getStringCellValue();
@@ -49,8 +50,29 @@ public class ExcelCollector {
             }
         }
         return indexLists;
-
     }
+
+    public List<Stock> readCodeExcel(String industry) {
+        Workbook wb = getWorkbook("code.xlsx");
+        List<Stock> indexLists = new LinkedList<>();
+        Sheet sheetAt = wb.getSheetAt(0);
+        for (Row row : sheetAt) {
+            if (row.getRowNum() != 0) {
+                Stock stock = new Stock();
+                String[] code = row.getCell(0).getStringCellValue().split("\\.");
+                stock.setCode(code[0]);
+                stock.setMarket(code[1]);
+                String name = row.getCell(1).getStringCellValue();
+                stock.setName(name);
+                stock.setIndustry(industry);
+                stock.setObserverIndustry("分析样本");
+                stock.setDt(new Date());
+                indexLists.add(stock);
+            }
+        }
+        return indexLists;
+    }
+
 
     private Workbook getWorkbook(String fileName) {
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(fileName);

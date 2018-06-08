@@ -19,8 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @Service
@@ -91,13 +89,13 @@ public class AnalysisTrendService {
     }
 
     public void analysisIndustryTrend(String industry) {
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
         List<AnalysisTrend> trendList = trendMapper.getAnalysisTrendList(0.2, "UP", industry);
         Map<String, List<AnalysisTrend>> groupByYear = trendList.stream().collect(Collectors.groupingBy(o -> o.getStartDt().substring(2, 4)));
+        Map<String, Set<String>> overalCodes = new HashMap<>();
         for (Map.Entry<String, List<AnalysisTrend>> listEntry : groupByYear.entrySet()) {
-            //牛市 最后分析  数据具有迷惑性
-            if (listEntry.getKey().equalsIgnoreCase("15") || listEntry.getKey().equalsIgnoreCase("16"))
-                continue;
+//            //牛市 最后分析  数据具有迷惑性
+//            if (listEntry.getKey().equalsIgnoreCase("15") || listEntry.getKey().equalsIgnoreCase("16"))
+//                continue;
             Map<String, List<AnalysisTrend>> groupByCode = listEntry.getValue().stream().collect(Collectors.groupingBy(AnalysisTrend::getCode));
             // 行情分析  1 求时间的交集  2  成交量确认
             if (MapUtils.isEmpty(groupByCode) || groupByCode.size() == 1) {
@@ -107,7 +105,7 @@ public class AnalysisTrendService {
             logger.info("{} 年 {} 行业 股票相同趋势 参与分析的股票 :{}", listEntry.getKey(), industry, groupByCode.keySet());
 
 //            //求交集
-            Set<OverlapTrend> result = new HashSet<>();
+            Set<OverlapTrend> alls = new HashSet<>();
 //            for (String code : groupByCode.keySet()) {
 //                for (AnalysisTrend trend : groupByCode.get(code)) {
 //                    alls.addAll(getOverlap(code, trend, groupByCode));
@@ -117,15 +115,15 @@ public class AnalysisTrendService {
             //修改算法，求单只股票 最大的
             for (String code : groupByCode.keySet()) {
                 for (AnalysisTrend trend : groupByCode.get(code)) {
-                    result.addAll(getOverlap(code, trend, groupByCode));
+                    alls.addAll(getOverlap(code, trend, groupByCode));
                 }
             }
-//            Set<OverlapTrend> result = null;
-//            while (CollectionUtils.isNotEmpty(alls)) {
-//                if (CollectionUtils.isNotEmpty(alls))
-//                    result = alls;
-//                alls = getOverlapTrend(alls);
-//            }
+            Set<OverlapTrend> result = null;
+            while (CollectionUtils.isNotEmpty(alls)) {
+                if (CollectionUtils.isNotEmpty(alls))
+                    result = alls;
+                alls = getOverlapTrend(alls);
+            }
             if (result == null) {
                 logger.info("{} 年 {} 行业 未出现一致性趋势", listEntry.getKey(), industry);
                 continue;
@@ -134,25 +132,49 @@ public class AnalysisTrendService {
                 temp.setIndustry(industry);
                 overlapTrendMapper.saveOverlapTrend(temp);
             }
+            OverlapTrend next = result.iterator().next();
+            Set<String> codes = next.getTrends().stream().map(AnalysisTrend::getCode).collect(Collectors.toSet());
+            overalCodes.put(listEntry.getKey(), codes);
             logger.info("{} 年 {} 行业 分析结果:{}", listEntry.getKey(), industry, result);
         }
+        Iterator<Map.Entry<String, Set<String>>> iterator = overalCodes.entrySet().iterator();
+        Map.Entry<String, Set<String>> first = iterator.next();
+        Set<String> source = first.getValue();
+        Set<String> allCodes = new HashSet<>();
+        allCodes.addAll(source);
+        logger.info("{} {}", first.getKey(), first.getValue());
+        while (iterator.hasNext()) {
+            Map.Entry<String, Set<String>> next = iterator.next();
+            logger.info("{} {}", next.getKey(), next.getValue());
+            if (!"18".equalsIgnoreCase(next.getKey())) {
+                source.retainAll(next.getValue());
+            allCodes.addAll(next.getValue());
+            }
+        }
+        logger.info(" 行业 {} 一致性趋势股票:{}", overalCodes.keySet(), source);
+        logger.info(" all {}", allCodes);
     }
 
     private Set<OverlapTrend> getOverlapTrend(Set<OverlapTrend> alls) {
         Set<OverlapTrend> allBack = new HashSet<>(alls);
         removeFirst(allBack);
         Set<OverlapTrend> result = new HashSet<>();
-        for (OverlapTrend temp : alls) {
-            for (OverlapTrend compare : allBack) {
-
+        Iterator<OverlapTrend> allIterator = alls.iterator();
+        Iterator<OverlapTrend> allBackIterator = allBack.iterator();
+        while (allIterator.hasNext()) {
+            OverlapTrend temp = allIterator.next();
+            while (allBackIterator.hasNext()) {
+                OverlapTrend compare = allBackIterator.next();
                 //相同的股票出现趋势
                 if (temp.getCodes().equals(compare.getCodes())) {
                     if ((temp.getStartTime() >= compare.getStartTime() && temp.getStartTime() <= compare.getEndTime())
                             || temp.getEndTime() >= compare.getStartTime() && temp.getEndTime() <= compare.getEndTime()) {
                         if ((temp.getEndTime() - temp.getStartTime()) > (compare.getEndTime() - compare.getStartTime())) {
                             logger.info("股票出现趋势 : 忽略 {} 选择 {}", compare, temp);
+                            allBackIterator.remove();
                             result.add(temp);
                         } else {
+                            allIterator.remove();
                             result.add(compare);
                             logger.info("股票出现趋势 : 忽略 {} 选择 {}", temp, compare);
                         }
@@ -171,7 +193,7 @@ public class AnalysisTrendService {
                     overlapTrend.getCodes().addAll(compare.getCodes());
                     overlapTrend.getTrends().addAll(temp.getTrends());
                     overlapTrend.getTrends().addAll(compare.getTrends());
-                    if (overlapTrend.getEndTime() - overlapTrend.getStartTime() > Constant.DAY * 7 && (overlapTrend.getEndTime() - overlapTrend.getStartTime() < Constant.DAY * 80))
+                    if (overlapTrend.getEndTime() - overlapTrend.getStartTime() > Constant.DAY * 10 && (overlapTrend.getEndTime() - overlapTrend.getStartTime() < Constant.DAY * 80))
                         result.add(overlapTrend);
                 }
             }
@@ -185,14 +207,14 @@ public class AnalysisTrendService {
         List<OverlapTrend> result = new LinkedList<>();
         List<AnalysisTrend> otherTrendList = getOtherTrend(code, groupByCode);
         if (analysisTrend.getEndDtTime() - analysisTrend.getStartDtTime() > Constant.DAY * 30 * 3
-                && analysisTrend.getEndDtTime() - analysisTrend.getStartDtTime() < Constant.DAY * 7) {
+                || analysisTrend.getEndDtTime() - analysisTrend.getStartDtTime() < Constant.DAY * 7) {
             logger.info("忽略无效数据: {}", analysisTrend);
             return result;
         }
         for (AnalysisTrend trend : otherTrendList) {
             //移除趋势持续时间过长的数据 (可能有停牌)
             if (trend.getEndDtTime() - trend.getStartDtTime() > Constant.DAY * 30 * 3
-                    && trend.getEndDtTime() - trend.getStartDtTime() < Constant.DAY * 7) {
+                    || trend.getEndDtTime() - trend.getStartDtTime() < Constant.DAY * 7) {
                 logger.info("忽略无效数据: {}", trend);
                 continue;
             }
@@ -213,35 +235,6 @@ public class AnalysisTrendService {
             }
         }
         return result;
-//        List<OverlapTrend> result = new LinkedList<>();
-//        List<AnalysisTrend> otherTrendList = getOtherTrend(code, groupByCode);
-//        if (analysisTrend.getEndDtTime() - analysisTrend.getStartDtTime() > Constant.DAY * 30 * 3) {
-//            logger.info("忽略无效数据: {}", analysisTrend);
-//            return result;
-//        }
-//        for (AnalysisTrend trend : otherTrendList) {
-//            //移除趋势持续时间过长的数据 (可能有停牌)
-//            if (trend.getEndDtTime() - trend.getStartDtTime() > Constant.DAY * 30 * 3) {
-//                logger.info("忽略无效数据: {}", trend);
-//                continue;
-//            }
-//            //出现重叠的2种情况
-//            if ((analysisTrend.getStartDtTime() >= trend.getStartDtTime() && analysisTrend.getStartDtTime() <= trend.getEndDtTime())
-//                    || analysisTrend.getEndDtTime() >= trend.getStartDtTime() && analysisTrend.getEndDtTime() <= trend.getEndDtTime()) {
-//                long startTime = Math.max(analysisTrend.getStartDtTime(), trend.getStartDtTime());
-//                long endTime = Math.min(analysisTrend.getEndDtTime(), trend.getEndDtTime());
-//                OverlapTrend overlapTrend = new OverlapTrend();
-//                overlapTrend.setStartTime(startTime);
-//                overlapTrend.setEndTime(endTime);
-//                overlapTrend.addTrend(trend);
-//                overlapTrend.addTrend(analysisTrend);
-//                overlapTrend.addCode(trend.getCode());
-//                overlapTrend.addCode(analysisTrend.getCode());
-//                if (overlapTrend.getEndTime() - overlapTrend.getStartTime() > Constant.DAY * 7 &&(overlapTrend.getEndTime() - overlapTrend.getStartTime() < Constant.DAY * 80 ))
-//                    result.add(overlapTrend);
-//            }
-//        }
-//        return result;
     }
 
     /**

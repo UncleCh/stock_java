@@ -120,11 +120,11 @@ public class StockService {
             }
         }
     }
-
     public void collectHistory(Stock temp) {
         Daily daily = new Daily();
         daily.setCode(temp.getCode());
         int count = dailyMapper.countDaily(daily);
+
         if (count > Constant.STOCK_SIZE) {
 //            analysisStock(temp);
             return;

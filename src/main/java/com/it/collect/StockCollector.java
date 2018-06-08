@@ -12,8 +12,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -260,38 +258,15 @@ public class StockCollector {
 
     @Autowired
     StockMapper stockMapper;
+    @Autowired
+    ExcelCollector excelCollector;
 
     public List<Stock> catchIndustryCode(String industry) {
-        String url = "http://vip.stock.finance.sina.com.cn/mkt/#new_ysjs";
-        final WebDriver webDriver = new ChromeDriver();
-        webDriver.get(url);
-        webDriver.findElement(By.xpath("//*[@id=\"tbl_wrap\"]/div/a[2]")).click();
-//        WebDriverWait wait = new WebDriverWait(webDriver, 20);
-//        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"tbl_wrap\"]/div/a[2]")));
-        List<Stock> collectResult = new LinkedList<>();
-        List<WebElement> elements = webDriver.findElements(By.xpath("//*[@id=\"tbl_wrap\"]/table/tbody/tr"));
-        for (WebElement webelement : elements) {
-            Stock stock = new Stock();
-            stock.setIndustry(industry);
-            stock.setRemark("分析样本");
-            String code = webelement.findElement(By.xpath("th[1]/a")).getText();
-            if (code.contains("sh")) {
-                stock.setMarket("sh");
-                code = code.replace("sh", "").trim();
-            } else {
-                stock.setMarket("sz");
-                code = code.replace("sz", "").trim();
-            }
-            String name = webelement.findElement(By.xpath("th[2]/a")).getText();
-            stock.setCode(code);
-            stock.setName(name);
-            stock.setDt(new Date());
-            stock.setObserverIndustry("稀土板块");
-            Stock stock1 = stockMapper.getStock(stock.getCode(), null);
-            if (stock1 == null)
-                stockMapper.saveStock(stock);
-        }
-        return collectResult;
+        List<Stock> stocks = excelCollector.readCodeExcel(industry);
+//        for (Stock stock : stocks) {
+//            stockMapper.saveStock(stock);
+//        }
+        return stocks;
     }
 
 }
