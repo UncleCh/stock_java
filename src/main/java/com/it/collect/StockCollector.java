@@ -18,10 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
@@ -263,9 +260,12 @@ public class StockCollector {
 
     public List<Stock> catchIndustryCode(String industry) {
         List<Stock> stocks = excelCollector.readCodeExcel(industry);
-//        for (Stock stock : stocks) {
-//            stockMapper.saveStock(stock);
-//        }
+        List<String> oberverData = Arrays.asList("000960", "600338", "601958", "600549", "000933", "000807",
+                "600392", "600111", "600497", "601168", "601600");
+        for (Stock stock : stocks) {
+            if (oberverData.contains(stock.getCode()))
+                stockMapper.saveStock(stock);
+        }
         return stocks;
     }
 

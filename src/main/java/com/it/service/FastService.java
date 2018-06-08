@@ -26,7 +26,7 @@ public class FastService {
 
     public void analysis() {
         String industry = "有色金属";
-        //增加样本，收集数据  002842
+//        //增加样本，收集数据  002842
         List<Stock> stockList = stockCollector.catchIndustryCode(industry);
 //        for (Stock temp : stockList) {
 //            stockService.collectHistory(temp);
@@ -38,16 +38,22 @@ public class FastService {
 //        industry = "分析样本";
 //        analysisTrendService.analysisIndustryTrend(industry);
 
+//        clearAnalysisDate();
+
 
     }
 
     public void clearAnalysisDate() {
-        List<String> oberverData = Arrays.asList("000960", "600338", "601958", "600549", "000933", "000807", "600392", "600111", "600497", "601168", "601600");
+        List<String> oberverData = Arrays.asList("000960", "600338", "601958", "600549", "000933", "000807",
+                "600392", "600111", "600497", "601168", "601600");
         Stock queryParam = new Stock();
         queryParam.setObserverIndustry("分析样本");
         List<Stock> stockList = stockMapper.getStockList(queryParam);
         for (Stock temp : stockList) {
-stockMapper
+            if(!oberverData.contains(temp.getCode())){
+                temp.setDt(null);
+                stockMapper.delete(temp);
+            }
         }
     }
 }

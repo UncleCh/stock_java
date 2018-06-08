@@ -65,10 +65,10 @@
         delete from stock
         <where>
             <if test="code != null">
-                code = #{code}
+                and code = #{code}
             </if>
             <if test=" dt != null">
-                dt = #{dt}
+                and dt = #{dt}
             </if>
         </where>
     </delete>
