@@ -208,14 +208,14 @@ public class AnalysisTrendService {
         List<AnalysisTrend> otherTrendList = getOtherTrend(code, groupByCode);
         if (analysisTrend.getEndDtTime() - analysisTrend.getStartDtTime() > Constant.DAY * 30 * 3
                 || analysisTrend.getEndDtTime() - analysisTrend.getStartDtTime() < Constant.DAY * 7) {
-            logger.info("忽略无效数据: {}", analysisTrend);
+//            logger.info("忽略无效数据: {}", analysisTrend);
             return result;
         }
         for (AnalysisTrend trend : otherTrendList) {
             //移除趋势持续时间过长的数据 (可能有停牌)
             if (trend.getEndDtTime() - trend.getStartDtTime() > Constant.DAY * 30 * 3
                     || trend.getEndDtTime() - trend.getStartDtTime() < Constant.DAY * 7) {
-                logger.info("忽略无效数据: {}", trend);
+//                logger.info("忽略无效数据: {}", trend);
                 continue;
             }
             //出现重叠的2种情况

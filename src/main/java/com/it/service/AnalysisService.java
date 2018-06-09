@@ -182,11 +182,11 @@ public class AnalysisService {
             else {
                 long trxAmtDouble = Long.parseLong(temp.getTrxAmt()) / Long.parseLong(daily.getTrxAmt());
                 countDays = countDays + 1;
-                if (trxAmtDouble >= 1.5) {
+                if (trxAmtDouble >= 1.4) {
                     appendDays = appendDays + 1;
                 }
 
-                if (countDays == 5) {
+                if (countDays == 6) {
                     if (appendDays >= 3)
                         return temp;
                     else {

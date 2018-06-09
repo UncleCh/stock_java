@@ -259,14 +259,17 @@ public class StockCollector {
     ExcelCollector excelCollector;
 
     public List<Stock> catchIndustryCode(String industry) {
-        List<Stock> stocks = excelCollector.readCodeExcel(industry);
-        List<String> oberverData = Arrays.asList("000960", "600338", "601958", "600549", "000933", "000807",
-                "600392", "600111", "600497", "601168", "601600");
-        for (Stock stock : stocks) {
-            if (oberverData.contains(stock.getCode()))
-                stockMapper.saveStock(stock);
-        }
-        return stocks;
+//        List<Stock> stocks = excelCollector.readCodeExcel(industry);
+//        List<String> oberverData = Arrays.asList("000960", "600338", "601958", "600549", "000933", "000807",
+//                "600392", "600111", "600497", "601168", "601600");
+//        for (Stock stock : stocks) {
+//            if (oberverData.contains(stock.getCode()))
+//                stockMapper.saveStock(stock);
+//        }
+//        return stocks;
+        Stock query = new Stock();
+        query.setIndustry(industry);
+        return stockMapper.getStockList(query);
     }
 
 }

@@ -22,6 +22,8 @@ public class FastService {
     DailyMapper dailyMapper;
     @Autowired
     StockMapper stockMapper;
+    @Autowired
+    AnalysisService analysisService;
 
 
     public void analysis() {
@@ -35,10 +37,11 @@ public class FastService {
 //            List<Daily> dailyList = dailyMapper.getDailyList(temp.getCode(), null, null);
 //            analysisTrendService.analysisTrendAndSave(temp, dailyList);
 //        }
-//        industry = "分析样本";
+        industry = "分析样本";
 //        analysisTrendService.analysisIndustryTrend(industry);
 
 //        clearAnalysisDate();
+        analysisService.analysisTrend(industry);
 
 
     }
@@ -50,7 +53,7 @@ public class FastService {
         queryParam.setObserverIndustry("分析样本");
         List<Stock> stockList = stockMapper.getStockList(queryParam);
         for (Stock temp : stockList) {
-            if(!oberverData.contains(temp.getCode())){
+            if (!oberverData.contains(temp.getCode())) {
                 temp.setDt(null);
                 stockMapper.delete(temp);
             }
