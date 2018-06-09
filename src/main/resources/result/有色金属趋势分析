@@ -1,0 +1,39 @@
+ 15 年 分析样本 行业 股票相同趋势 参与分析的股票 :[000960, 600338, 601958, 600549, 600392, 000933, 600111, 000807, 601168, 601600]
+ 15 年 分析样本 行业 分析结果:[
+ OverlapTrend{startTime=2015-10-09, endTime=2015-11-10codes 
+ [AnalysisTrend{id='23738', code='600338', trend='UP', startDt='2015-09-25', endDt='2015-12-07', wave=0.9459677419354838, max=0.0, min=0.0}, 
+ AnalysisTrend{id='24085', code='601958', trend='UP', startDt='2015-10-09', endDt='2015-11-10', wave=0.25537634408602156, max=0.0, min=0.0}, 
+ AnalysisTrend{id='23697', code='600111', trend='UP', startDt='2015-10-08', endDt='2015-11-12', wave=0.36197718631178716, max=0.0, min=0.0}]}]
+
+ 16 年 分析样本 行业 股票相同趋势 参与分析的股票 :[000960, 600338, 600549, 600392, 000933, 600111, 600497, 000807, 601600]
+ 16 年 分析样本 行业 分析结果:[
+ OverlapTrend{startTime=2016-02-05, endTime=2016-02-17codes 
+ [AnalysisTrend{id='23927', code='600549', trend='UP', startDt='2016-02-02', endDt='2016-02-23', wave=0.3338028169014086, max=0.0, min=0.0},
+  AnalysisTrend{id='23532', code='000807', trend='UP', startDt='2016-02-05', endDt='2016-03-02', wave=0.4140233722871453, max=0.0, min=0.0},
+  AnalysisTrend{id='24065', code='601600', trend='UP', startDt='2016-02-03', endDt='2016-03-08', wave=0.24570024570024568, max=0.0, min=0.0}, 
+  AnalysisTrend{id='23747', code='600338', trend='UP', startDt='2016-02-03', endDt='2016-02-17', wave=0.39118457300275494, max=0.0, min=0.0}, 
+  AnalysisTrend{id='23811', code='600392', trend='UP', startDt='2016-02-02', endDt='2016-02-23', wave=0.3550295857988166, max=0.0, min=0.0}]}]
+
+
+
+ 17 年 分析样本 行业 股票相同趋势 参与分析的股票 :[000960, 600338, 601958, 600549, 600392, 000933, 600111, 600497, 000807, 601168, 601600]
+ 17 年 分析样本 行业 分析结果:[
+ OverlapTrend{startTime=2017-07-20, endTime=2017-07-31codes 
+ [AnalysisTrend{id='23615', code='000933', trend='UP', startDt='2017-06-12', endDt='2017-08-08', wave=1.3059006211180124, max=0.0, min=0.0}, 
+ AnalysisTrend{id='23560', code='000807', trend='UP', startDt='2017-06-23', endDt='2017-08-10', wave=0.9444444444444445, max=0.0, min=0.0},
+ AnalysisTrend{id='24080', code='601600', trend='UP', startDt='2017-06-22', endDt='2017-08-09', wave=0.7815315315315317, max=0.0, min=0.0},
+ AnalysisTrend{id='23774', code='600338', trend='UP', startDt='2017-06-16', endDt='2017-07-31', wave=0.4650339333136618, max=0.0, min=0.0}, 
+ AnalysisTrend{id='24115', code='601958', trend='UP', startDt='2017-07-20', endDt='2017-08-09', wave=0.3266078184110971, max=0.0, min=0.0}, 
+ AnalysisTrend{id='23901', code='600497', trend='UP', startDt='2017-05-24', endDt='2017-08-09', wave=0.5689045936395759, max=0.0, min=0.0},
+ AnalysisTrend{id='23721', code='600111', trend='UP', startDt='2017-07-07', endDt='2017-08-08', wave=0.6284644194756555, max=0.0, min=0.0},
+ AnalysisTrend{id='24016', code='601168', trend='UP', startDt='2017-06-13', endDt='2017-08-08', wave=0.4453125, max=0.0, min=0.0},
+ AnalysisTrend{id='23957', code='600549', trend='UP', startDt='2017-06-22', endDt='2017-08-09', wave=0.706086095992083, max=0.0, min=0.0},
+ AnalysisTrend{id='23844', code='600392', trend='UP', startDt='2017-06-12', endDt='2017-08-14', wave=1.3893263342082238, max=0.0, min=0.0}]}]
+
+ 18 年 分析样本 行业 股票相同趋势 参与分析的股票 :[600392, 000807]
+ 18 年 分析样本 行业 未出现一致性趋势
+2018-06-09 12:01:59.679  INFO 3692 --- [           main] com.it.service.AnalysisTrendService      : 15 [600338, 601958, 600111]
+2018-06-09 12:01:59.679  INFO 3692 --- [           main] com.it.service.AnalysisTrendService      : 16 [600338, 600549, 600392, 000807, 601600]
+2018-06-09 12:01:59.679  INFO 3692 --- [           main] com.it.service.AnalysisTrendService      : 17 [600338, 601958, 600549, 600392, 000933, 600111, 000807, 600497, 601168, 601600]
+2018-06-09 12:01:59.680  INFO 3692 --- [           main] com.it.service.AnalysisTrendService      :  行业 [15, 16, 17] 一致性趋势股票:[600338]
+2018-06-09 12:01:59.680  INFO 3692 --- [           main] com.it.service.AnalysisTrendService      :  all [600338, 601958, 600549, 600392, 000933, 600111, 000807, 600497, 601168, 601600]
