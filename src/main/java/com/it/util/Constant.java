@@ -14,4 +14,6 @@ public class Constant {
     public static final int STOCK = 2;
 
     public static final long DAY = 86400000;
+
+    public static final String OBERVER_INDUSTRY = "周期性行业-代表公司";
 }
