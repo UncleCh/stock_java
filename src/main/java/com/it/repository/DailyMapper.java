@@ -17,4 +17,6 @@ public interface DailyMapper {
 
     List<Daily> getDailyList(@Param("code") String code, @Param("dt") String startDt,
                              @Param("endDt") String endDt);
+
+    List<Daily> getRecDailyList(@Param("code") String code);
 }

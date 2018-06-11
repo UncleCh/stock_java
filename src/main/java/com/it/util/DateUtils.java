@@ -4,8 +4,8 @@ package com.it.util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 public class DateUtils {
@@ -28,12 +28,6 @@ public class DateUtils {
     }
 
 
-    public static int distanceDays(String startDate, String endDate) {
-        LocalDate startLocal = LocalDate.parse(startDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        LocalDate endLocal = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        Period between = Period.between(startLocal, endLocal);
-        return between.getDays();
-    }
 
     public static Date getCurDate(String dateFormat, Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);

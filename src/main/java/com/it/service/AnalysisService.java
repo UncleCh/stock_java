@@ -186,7 +186,7 @@ public class AnalysisService {
                     appendDays = appendDays + 1;
                 }
 
-                if (countDays == 6) {
+                if (countDays == 7) {
                     if (appendDays >= 3)
                         return temp;
                     else {

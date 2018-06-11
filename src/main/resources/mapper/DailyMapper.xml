@@ -31,6 +31,10 @@
         </if>
         order by dt ASC
     </select>
+    <select id="getRecDailyList" resultMap="DailyMap">
+        select * from daily where code = #{code}
+        order by dt DESC limit 5
+    </select>
 
     <select id="countDaily" resultType="int">
         select count(1) from daily

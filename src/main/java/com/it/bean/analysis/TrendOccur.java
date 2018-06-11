@@ -5,7 +5,7 @@ public class TrendOccur {
     //开始时间
     private long startTime;
     //上涨幅度
-    private long upTrend;
+    private double upTrend;
     //天数
     private int days;
 
@@ -19,11 +19,11 @@ public class TrendOccur {
         this.startTime = startTime;
     }
 
-    public long getUpTrend() {
+    public double getUpTrend() {
         return upTrend;
     }
 
-    public void setUpTrend(long upTrend) {
+    public void setUpTrend(double upTrend) {
         this.upTrend = upTrend;
     }
 
