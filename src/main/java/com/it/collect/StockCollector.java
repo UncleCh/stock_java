@@ -58,7 +58,8 @@ public class StockCollector {
 
     public Daily collectStockCode(Stock stock, WebDriver webDriver) throws IOException {
         String url = "http://finance.sina.com.cn/realstock/company/" +
-                stock.getMarket() + stock.getCode() + "/nc.shtml";
+                stock.getMarket().toLowerCase() + stock.getCode() + "/nc.shtml";
+//        http://finance.sina.com.cn/realstock/company/sz000807/nc.shtml
         webDriver.get(url);
         String total = webDriver
                 .findElement(By.xpath("//*[@id=\"hqDetails\"]/table/tbody/tr[3]/td[2]")).getText();
@@ -81,9 +82,9 @@ public class StockCollector {
         Daily daily = new Daily();
         if (!trxTotal.contains("--")) {
             if (trxTotal.contains("万")) {
-                daily.setTrxTotal((long) (Double.parseDouble(trxTotal.replaceAll("万手", "")) * 10000));
+                daily.setTrxAmt( String.valueOf((int)(Double.parseDouble(trxTotal.replaceAll("万手", "")) * 10000)));
             } else
-                daily.setTrxTotal((long) Double.parseDouble(trxTotal.replaceAll("手", "")));
+                daily.setTrxAmt( String.valueOf((int)Double.parseDouble(trxTotal.replaceAll("手", ""))));
         }
         if (!chargeP.contains("--") && StringUtils.isNotEmpty(chargeP))
             daily.setChangeP(Double.parseDouble(chargeP.replaceAll("%", "")));
@@ -106,7 +107,7 @@ public class StockCollector {
         else
             logger.info("错误的数据 {} 市盈率 {}", url, pe);
         daily.setCode(stock.getCode());
-        daily.setTrxAmt(trxAmt);
+        daily.setTrxTotal(trxAmt);
         Date dt = null;
         if (StringUtils.isNotEmpty(dateStr))
             dt = DateUtils.parse("yyyy-MM-dd", dateStr);

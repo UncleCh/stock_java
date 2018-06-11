@@ -38,7 +38,7 @@ public class TrendOccurModel {
                 if (daily.getAmplitude() > 0)
                     start = daily;
             } else {
-                if (daily.getAmplitude() > 0 || daily.getClose() > start.getClose()) {
+                if (daily.getAmplitude() > 0 && daily.getClose() > start.getClose()) {
                     upDays = upDays + 1;
                 }
             }
@@ -47,7 +47,7 @@ public class TrendOccurModel {
             return Optional.empty();
         Daily curDaily = recDailyList.get(recDailyList.size() - 1);
         double upTrend = (curDaily.getClose() - start.getClose()) / ((start.getOpen() + start.getClose()) / 2);
-        if (upDays >= 2 || upTrend > 0.05) {
+        if (upDays >= 2 && upTrend > 0.03) {
             TrendOccur trendOccur = new TrendOccur();
             trendOccur.setCode(curDaily.getCode());
             trendOccur.setDays(upDays);

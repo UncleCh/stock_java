@@ -28,6 +28,9 @@
             <if test="dt != null">
                 and dt >= #{dt}
             </if>
+            <if test="remark != null">
+                and remark = #{remark}
+            </if>
         </where>
     </select>
 

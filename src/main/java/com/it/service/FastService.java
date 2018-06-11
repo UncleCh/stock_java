@@ -2,6 +2,7 @@ package com.it.service;
 
 import com.it.bean.Stock;
 import com.it.bean.StockProperties;
+import com.it.bean.analysis.TrendOccurModel;
 import com.it.collect.StockCollector;
 import com.it.repository.DailyMapper;
 import com.it.repository.StockMapper;
@@ -27,15 +28,19 @@ public class FastService {
     StockMapper stockMapper;
     @Autowired
     AnalysisService analysisService;
+    @Autowired
+    TrendOccurModel trendOccurModel;
 
 
     public void analysis() {
         String industry = "有色金属";
 //        //增加样本，收集数据  002842
         List<Stock> stockList = stockCollector.catchIndustryCode(industry);
-//        for (Stock temp : stockList) {
+        stockService.collectStock(stockList);
+        for (Stock temp : stockList) {
 //            stockService.collectHistory(temp);
-//        }
+        }
+        trendOccurModel.analysis(industry);
 //        for (Stock temp : stockList) {
 //            List<Daily> dailyList = dailyMapper.getDailyList(temp.getCode(), null, null);
 //            analysisTrendService.analysisTrendAndSave(temp, dailyList);

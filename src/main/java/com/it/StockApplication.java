@@ -1,6 +1,7 @@
 package com.it;
 
 import com.it.collect.ExcelCollector;
+import com.it.repository.StockMapper;
 import com.it.service.AnalysisService;
 import com.it.service.FastService;
 import com.it.service.StockService;
@@ -27,13 +28,14 @@ public class StockApplication implements CommandLineRunner {
     private FastService fastService;
     @Autowired
     ExcelCollector excelCollector;
+    @Autowired
+    StockMapper stockMapper;
 
     private Logger logger = LoggerFactory.getLogger(StockApplication.class);
 
 
     public void run(String... strings) throws Exception {
-//        analysisService.analysis("稀土板块");
-//        analysisService.analysisIndustryTrend("稀土板块");
+
         fastService.analysis();
     }
 

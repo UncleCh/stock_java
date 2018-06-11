@@ -51,7 +51,6 @@ public class StockService {
     private AnalysisTrendService analysisTrendService;
     private Logger logger = LoggerFactory.getLogger(StockService.class);
 
-    ExecutorService executorService = Executors.newFixedThreadPool(1);
 
     public void multiCollectStock() {
         List<Stock> indexLists = excelCollector.readExcel("index/000300cons.xls");
@@ -97,14 +96,11 @@ public class StockService {
         daily.setDt(DateUtils.getCurDate());
         if (dailyMapper.exits(daily))
             return;
-        Future<Daily> dailyFuture = executorService.submit(() -> stockCollector.collectStockCode(temp, webDriver));
         try {
             daily = null;
-            daily = dailyFuture.get(10, TimeUnit.SECONDS);
-        } catch (InterruptedException | ExecutionException e) {
+            daily = stockCollector.collectStockCode(temp, webDriver);
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (TimeoutException e) {
-            return;
         }
         if (daily != null && !dailyMapper.exits(daily))
             dailyMapper.saveDaily(daily);

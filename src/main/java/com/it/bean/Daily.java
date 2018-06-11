@@ -17,9 +17,9 @@ public class Daily {
     private double open;
     //收盘价
     private double close;
-    //成交量
-    private long trxTotal;
     //成交额
+    private String trxTotal;
+    //成交量
     private String trxAmt;
     //振幅
     private double amplitude;
@@ -74,11 +74,11 @@ public class Daily {
         this.close = close;
     }
 
-    public long getTrxTotal() {
+    public String getTrxTotal() {
         return trxTotal;
     }
 
-    public void setTrxTotal(long trxTotal) {
+    public void setTrxTotal(String trxTotal) {
         this.trxTotal = trxTotal;
     }
 
