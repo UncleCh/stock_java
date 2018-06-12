@@ -55,6 +55,14 @@
         ,#{trxPer},#{peRatio},#{total},#{dt},#{changeP})
     </insert>
 
+    <insert id="batchSaveDaily">
+        insert into daily (code, max,min,open,close,trx_total,trx_amt,amplitude,trx_per,pe_ratio,total,dt,change_p)  values
+        <foreach collection="dailyList" item="daily" index="index" separator=",">
+            (#{daily.code}, #{daily.max},#{daily.min},#{daily.open},#{daily.close},#{daily.trxTotal},#{daily.trxAmt},#{daily.amplitude}
+            ,#{daily.trxPer},#{daily.peRatio},#{daily.total},#{daily.dt},#{daily.changeP})
+        </foreach>
+    </insert>
+
     <update id="updateStock">
         UPDATE code SET
         weight = #{weight}

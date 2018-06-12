@@ -11,6 +11,8 @@ public interface DailyMapper {
 
     void saveDaily(Daily daily);
 
+    void batchSaveDaily(@Param("dailyList") List<Daily> dailyList);
+
     boolean exits(Daily daily);
 
     int countDaily(Daily dt);

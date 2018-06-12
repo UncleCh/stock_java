@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.*;
 
 @Service
 public class StockService {
@@ -116,6 +115,7 @@ public class StockService {
             }
         }
     }
+
     public void collectHistory(Stock temp) {
         Daily daily = new Daily();
         daily.setCode(temp.getCode());
@@ -128,11 +128,12 @@ public class StockService {
         try {
             List<Daily> dailyList = stockCollector.collectStockHistory(temp);
             logger.info("抓取股票历史数据 {} 大小{}", temp.getCode(), dailyList.size());
-            for (Daily tempD : dailyList) {
-                if (!dailyMapper.exits(tempD)) {
-                    dailyMapper.saveDaily(tempD);
-                }
-            }
+//            for (Daily tempD : dailyList) {
+                dailyMapper.batchSaveDaily(dailyList);
+//                if (!dailyMapper.exits(tempD)) {
+//                    dailyMapper.saveDaily(tempD);
+//                }
+//            }
         } catch (IOException e) {
             e.printStackTrace();
         }
