@@ -66,7 +66,7 @@ public class StockCollector {
         String open = webDriver.findElement(By.xpath("//*[@id=\"hqDetails\"]/table/tbody/tr[1]/td[1]")).getText();
         String max = webDriver.findElement(By.xpath("//*[@id=\"hqDetails\"]/table/tbody/tr[2]/td[1]")).getText();
         String min = webDriver.findElement(By.xpath("//*[@id=\"hqDetails\"]/table/tbody/tr[3]/td[1]")).getText();
-        String close = webDriver.findElement(By.xpath("//*[@id=\"hqDetails\"]/table/tbody/tr[4]/td[1]")).getText();
+        String close = webDriver.findElement(By.xpath("//*[@id=\"price\"]")).getText();
         String amplitude = webDriver.findElement(By.xpath("//*[@id=\"hqDetails\"]/table/tbody/tr[1]/td[3]")).getText();
         String trxPer = webDriver.findElement(By.xpath("//*[@id=\"hqDetails\"]/table/tbody/tr[2]/td[3]")).getText();
         String pe = webDriver.findElement(By.xpath("//*[@id=\"hqDetails\"]/table/tbody/tr[4]/td[3]")).getText().trim();
@@ -261,8 +261,8 @@ public class StockCollector {
 
     public List<Stock> catchIndustryCode(String industry) {
         List<Stock> stocks = excelCollector.readCodeExcel(industry);
-//        List<String> oberverData = Arrays.asList("000960", "600338", "601958", "600549", "000933", "000807",
-//                "600392", "600111", "600497", "601168", "601600");
+        List<String> oberverData = Arrays.asList("000960", "600338", "601958", "600549", "000933", "000807",
+                "600392", "600111", "600497", "601168", "601600");
 //        for (Stock stock : stocks) {
 //            if (oberverData.contains(stock.getCode()))
 //                stockMapper.saveStock(stock);

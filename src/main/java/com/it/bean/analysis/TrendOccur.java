@@ -1,6 +1,10 @@
 package com.it.bean.analysis;
 
 
+import com.it.util.DateUtils;
+
+import java.util.Date;
+
 public class TrendOccur {
     //开始时间
     private long startTime;
@@ -41,5 +45,15 @@ public class TrendOccur {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    @Override
+    public String toString() {
+        return "TrendOccur{" +
+                "startTime=" + DateUtils.toSystemDate(new Date(startTime)) +
+                ", upTrend=" + upTrend +
+                ", days=" + days +
+                ", code='" + code + '\'' +
+                '}';
     }
 }

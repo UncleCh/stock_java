@@ -34,20 +34,20 @@ public class FastService {
 
 
     public void analysis() {
-        String industry = "房地产";
+        String industry = "有色金属";
 //        //增加样本，收集数据  002842
         List<Stock> stockList = stockCollector.catchIndustryCode(industry);
-//        stockService.collectStock(stockList);
 //        for (Stock temp : stockList) {
 //            stockService.collectHistory(temp);
 //        }
-//        trendOccurModel.analysis(industry);
-        for (Stock temp : stockList) {
-            List<Daily> dailyList = dailyMapper.getDailyList(temp.getCode(), null, null);
-            analysisTrendService.analysisTrendAndSave(temp, dailyList);
-        }
-        industry = "分析样本";
-        analysisTrendService.analysisIndustryTrend(industry);
+//        stockService.collectStock(stockList);
+        trendOccurModel.analysis(industry);
+//        for (Stock temp : stockList) {
+//            List<Daily> dailyList = dailyMapper.getDailyList(temp.getCode(), null, null);
+//            analysisTrendService.analysisTrendAndSave(temp, dailyList);
+//        }
+//        industry = "分析样本";
+//        analysisTrendService.analysisIndustryTrend(industry);
 
 //        clearAnalysisDate();
 //        analysisService.analysisTrend(industry);

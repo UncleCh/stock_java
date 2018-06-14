@@ -90,6 +90,7 @@ public class TrendOccurModel {
         if (happyList.isEmpty()) {
             logger.info("{} 未出现有效趋势", industry);
         } else {
+            logger.info("{} 买入方出现趋势", happyList);
             for (TrendOccur trendOccur : happyList) {
                 List<TrendOccur> trendOccurs = occurTrend(trendOccur);
                 if (!trendOccurs.isEmpty()) {
