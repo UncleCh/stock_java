@@ -33,7 +33,7 @@
     </select>
     <select id="getRecDailyList" resultMap="DailyMap">
         select * from daily where code = #{code}
-        order by dt DESC limit 5
+        order by dt DESC limit 15
     </select>
 
     <select id="countDaily" resultType="int">

@@ -26,7 +26,10 @@ public class Stock {
     private String concept;
     private String remark;
     private String observerIndustry;
-
+    //压力位
+    private double pressurePosition;
+    //支撑位
+    private double supportPosition;
     public String getCode() {
         return code;
     }
@@ -105,5 +108,21 @@ public class Stock {
 
     public void setObserverIndustry(String observerIndustry) {
         this.observerIndustry = observerIndustry;
+    }
+
+    public double getPressurePosition() {
+        return pressurePosition;
+    }
+
+    public void setPressurePosition(double pressurePosition) {
+        this.pressurePosition = pressurePosition;
+    }
+
+    public double getSupportPosition() {
+        return supportPosition;
+    }
+
+    public void setSupportPosition(double supportPosition) {
+        this.supportPosition = supportPosition;
     }
 }

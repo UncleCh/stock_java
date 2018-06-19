@@ -4,6 +4,7 @@ import com.it.bean.Daily;
 import com.it.bean.Finance;
 import com.it.bean.Stock;
 import com.it.repository.StockMapper;
+import com.it.util.BuyWeight;
 import com.it.util.Constant;
 import com.it.util.DateUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -260,17 +261,106 @@ public class StockCollector {
     ExcelCollector excelCollector;
 
     public List<Stock> catchIndustryCode(String industry) {
-        List<Stock> stocks = excelCollector.readCodeExcel(industry);
-        List<String> oberverData = Arrays.asList("000960", "600338", "601958", "600549", "000933", "000807",
-                "600392", "600111", "600497", "601168", "601600");
+//        List<Stock> stocks = getAll();
 //        for (Stock stock : stocks) {
-//            if (oberverData.contains(stock.getCode()))
-//                stockMapper.saveStock(stock);
+////            if (oberverData.contains(stock.getCode()))
+////                stockMapper.saveStock(stock);
 //        }
 //        return stocks;
         Stock query = new Stock();
         query.setIndustry(industry);
         return stockMapper.getStockList(query);
+    }
+
+    private List<Stock> getAll(){
+        String industry ="房地产",observerIndustry = "周期性行业-代表公司";
+        Stock stock = new Stock();
+        stock.setCode("600340");
+        stock.setName("华夏幸福");
+        stock.setWeight(BuyWeight.BUY_SECOND.getWeiht());
+        stock.setIndustry(industry);
+        stock.setObserverIndustry(observerIndustry);
+        stock.setPressurePosition(29.89);
+        stock.setSupportPosition(26.71);
+        stock.setDt(new Date());
+        Stock stock1 = new Stock();
+        stock1.setCode("600048");
+        stock1.setName("保利地产");
+        stock1.setWeight(BuyWeight.BUY_FIRST.getWeiht());
+        stock1.setIndustry(industry);
+        stock1.setObserverIndustry(observerIndustry);
+        stock1.setPressurePosition(14.18);
+        stock1.setSupportPosition(11.56);
+        stock1.setDt(new Date());
+
+        Stock stock2 = new Stock();
+        stock2.setCode("601155");
+        stock2.setName("新城控股");
+        stock2.setWeight(BuyWeight.BUY_SECOND.getWeiht());
+        stock2.setIndustry(industry);
+        stock2.setObserverIndustry(observerIndustry);
+        stock2.setPressurePosition(34.05);
+        stock2.setSupportPosition(27.38);
+        stock2.setDt(new Date());
+        Stock stock3 = new Stock();
+        stock3.setCode("600383");
+        stock3.setName("金地集团");
+        stock3.setIndustry(industry);
+        stock3.setObserverIndustry(observerIndustry);
+        stock3.setPressurePosition(11.22);
+        stock3.setSupportPosition(10.45);
+        stock3.setDt(new Date());
+        Stock stock4 = new Stock();
+        stock4.setCode("001979");
+        stock4.setName("招商蛇口");
+        stock4.setIndustry(industry);
+        stock4.setObserverIndustry(observerIndustry);
+        stock4.setPressurePosition(23.03);
+        stock4.setSupportPosition(20.87);
+        stock4.setDt(new Date());
+        Stock stock5 = new Stock();
+        stock5.setCode("000002");
+        stock5.setName("万科A");
+        stock5.setIndustry(industry);
+        stock5.setObserverIndustry(observerIndustry);
+        stock5.setPressurePosition(28.42);
+        stock5.setSupportPosition(25.17);
+        stock5.setDt(new Date());
+        Stock stock6 = new Stock();
+        stock6.setCode("000069");
+        stock6.setName("华侨城A");
+        stock6.setIndustry(industry);
+        stock6.setObserverIndustry(observerIndustry);
+        stock6.setPressurePosition(8.13);
+        stock6.setSupportPosition(7.73);
+        stock6.setDt(new Date());
+        Stock stock7 = new Stock();
+        stock7.setCode("000671");
+        stock7.setName("阳光城");
+        stock7.setIndustry(industry);
+        stock7.setObserverIndustry(observerIndustry);
+        stock7.setPressurePosition(7.05);
+        stock7.setSupportPosition(6.1);
+        stock7.setDt(new Date());
+        Stock stock8 = new Stock();
+        stock8.setCode("600622");
+        stock8.setName("光大嘉宝");
+        stock8.setIndustry(industry);
+        stock8.setObserverIndustry(observerIndustry);
+        stock8.setPressurePosition(9.53);
+        stock8.setSupportPosition(7.13);
+        stock8.setDt(new Date());
+        List<Stock> stockList = new LinkedList<>();
+        stockList.add(stock);
+        stockList.add(stock1);
+        stockList.add(stock2);
+        stockList.add(stock3);
+        stockList.add(stock4);
+        stockList.add(stock5);
+        stockList.add(stock6);
+        stockList.add(stock7);
+        stockList.add(stock8);
+        return stockList;
     }
 
 }

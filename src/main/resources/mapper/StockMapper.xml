@@ -46,8 +46,8 @@
     </select>
 
     <insert id="saveStock" >
-        insert into stock (code, name,dt,weight,index_code,market,industry,concept,remark,observer_industry)
-        values (#{code}, #{name},#{dt},#{weight},#{indexCode},#{market},#{industry},#{concept},#{remark},#{observerIndustry})
+        insert into stock (code, name,dt,weight,index_code,market,industry,concept,remark,observer_industry,pressure_position,support_position)
+        values (#{code}, #{name},#{dt},#{weight},#{indexCode},#{market},#{industry},#{concept},#{remark},#{observerIndustry},#{pressurePosition},#{supportPosition})
     </insert>
 
     <update id="updateStock">

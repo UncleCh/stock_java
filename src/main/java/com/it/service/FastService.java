@@ -34,7 +34,7 @@ public class FastService {
 
 
     public void analysis() {
-        String industry = "有色金属";
+        String industry = "房地产";
 //        //增加样本，收集数据  002842
         List<Stock> stockList = stockCollector.catchIndustryCode(industry);
 //        for (Stock temp : stockList) {

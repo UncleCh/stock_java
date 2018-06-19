@@ -83,6 +83,12 @@ public class TrendOccurModel {
         List<Stock> stockList = stockMapper.getStockList(queryParam);
         for (Stock stock : stockList) {
             List<Daily> recDailyList = dailyMapper.getRecDailyList(stock.getCode());
+            for (Daily daily : recDailyList) {
+                if(daily.getClose() > stock.getPressurePosition()
+                        || daily.getClose() < stock.getSupportPosition()){
+                    logger.info("收盘价 {} 压力位 {} 支撑位 {}",daily.getClose(),stock.getPressurePosition(),stock.getSupportPosition());
+                }
+            }
             recDailyList.sort(Comparator.comparingLong(o -> o.getDt().getTime()));
             Optional<TrendOccur> trendOccur = occurTrend(recDailyList);
             trendOccur.ifPresent(happyList::add);
