@@ -19,7 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
@@ -57,6 +60,13 @@ public class StockCollector {
         System.out.println(DateUtils.parse("yyyy-MM-dd", "2018-01-22 11:09:09"));
     }
 
+    public Daily collectStockCode(String code, String market, WebDriver webDriver) throws IOException {
+        Stock stock = new Stock();
+        stock.setCode(code);
+        stock.setMarket(market);
+        return collectStockCode(stock, webDriver);
+    }
+
     public Daily collectStockCode(Stock stock, WebDriver webDriver) throws IOException {
         String url = "http://finance.sina.com.cn/realstock/company/" +
                 stock.getMarket().toLowerCase() + stock.getCode() + "/nc.shtml";
@@ -83,9 +93,9 @@ public class StockCollector {
         Daily daily = new Daily();
         if (!trxTotal.contains("--")) {
             if (trxTotal.contains("万")) {
-                daily.setTrxAmt( String.valueOf((int)(Double.parseDouble(trxTotal.replaceAll("万手", "")) * 10000)));
+                daily.setTrxAmt(String.valueOf((int) (Double.parseDouble(trxTotal.replaceAll("万手", "")) * 10000)));
             } else
-                daily.setTrxAmt( String.valueOf((int)Double.parseDouble(trxTotal.replaceAll("手", ""))));
+                daily.setTrxAmt(String.valueOf((int) Double.parseDouble(trxTotal.replaceAll("手", ""))));
         }
         if (!chargeP.contains("--") && StringUtils.isNotEmpty(chargeP))
             daily.setChangeP(Double.parseDouble(chargeP.replaceAll("%", "")));
@@ -272,8 +282,8 @@ public class StockCollector {
         return stockMapper.getStockList(query);
     }
 
-    private List<Stock> getAll(){
-        String industry ="房地产",observerIndustry = "周期性行业-代表公司";
+    private List<Stock> getAll() {
+        String industry = "房地产", observerIndustry = "周期性行业-代表公司";
         Stock stock = new Stock();
         stock.setCode("600340");
         stock.setName("华夏幸福");

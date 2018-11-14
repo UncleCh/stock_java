@@ -128,12 +128,12 @@ public class StockService {
         try {
             List<Daily> dailyList = stockCollector.collectStockHistory(temp);
             logger.info("抓取股票历史数据 {} 大小{}", temp.getCode(), dailyList.size());
-//            for (Daily tempD : dailyList) {
-                dailyMapper.batchSaveDaily(dailyList);
-//                if (!dailyMapper.exits(tempD)) {
-//                    dailyMapper.saveDaily(tempD);
-//                }
-//            }
+            for (Daily tempD : dailyList) {
+//                dailyMapper.batchSaveDaily(dailyList);
+                if (!dailyMapper.exits(tempD)) {
+                    dailyMapper.saveDaily(tempD);
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

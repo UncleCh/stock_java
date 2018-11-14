@@ -1,0 +1,605 @@
+2018-11-14 15:26:01 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE ""CODE_OBSERVER"" (
+  ""STOCK_NAME"" VARCHAR(18) NOT NULL COMMENT '股票代码名称',
+  ""CLOSE_PRICE"" DECIMAL(10,2) DEFAULT NULL COMMENT '收盘价',
+  ""INCR_PER"" DECIMAL(10,2) DEFAULT NULL COMMENT '复合增长率',
+  ""PE"" DECIMAL(10,2) DEFAULT NULL,
+  ""REC_PEG"" DECIMAL(10,2) DEFAULT NULL COMMENT '滚动PEG',
+  ""TEN_DAY"" DECIMAL(10,2) DEFAULT NULL
+) ENGINE=INNODB DEFAULT CHARSET=LATIN1[*] "; expected "UTF8, UTF8MB4"; SQL statement:
+CREATE TABLE `code_observer` (
+  `stock_name` varchar(18) NOT NULL COMMENT '股票代码名称',
+  `close_price` decimal(10,2) DEFAULT NULL COMMENT '收盘价',
+  `incr_per` decimal(10,2) DEFAULT NULL COMMENT '复合增长率',
+  `pe` decimal(10,2) DEFAULT NULL,
+  `rec_peg` decimal(10,2) DEFAULT NULL COMMENT '滚动PEG',
+  `ten_day` decimal(10,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 [42001-193]
+2018-11-14 15:26:08 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE ""CODE_OBSERVER"" (
+  ""STOCK_NAME"" VARCHAR(18) NOT NULL COMMENT '股票代码名称',
+  ""CLOSE_PRICE"" DECIMAL(10,2) DEFAULT NULL COMMENT '收盘价',
+  ""INCR_PER"" DECIMAL(10,2) DEFAULT NULL COMMENT '复合增长率',
+  ""PE"" DECIMAL(10,2) DEFAULT NULL,
+  ""REC_PEG"" DECIMAL(10,2) DEFAULT NULL COMMENT '滚动PEG',
+  ""TEN_DAY"" DECIMAL(10,2) DEFAULT NULL
+) ENGINE=INNODB DEFAULT CHARSET=LATIN1[*] "; expected "UTF8, UTF8MB4"; SQL statement:
+CREATE TABLE `code_observer` (
+  `stock_name` varchar(18) NOT NULL COMMENT '股票代码名称',
+  `close_price` decimal(10,2) DEFAULT NULL COMMENT '收盘价',
+  `incr_per` decimal(10,2) DEFAULT NULL COMMENT '复合增长率',
+  `pe` decimal(10,2) DEFAULT NULL,
+  `rec_peg` decimal(10,2) DEFAULT NULL COMMENT '滚动PEG',
+  `ten_day` decimal(10,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 [42001-193]
+2018-11-14 15:26:13 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE ""CODE_OBSERVER"" (
+  ""STOCK_NAME"" VARCHAR(18) NOT NULL COMMENT '股票代码名称',
+  ""CLOSE_PRICE"" DECIMAL(10,2) DEFAULT NULL COMMENT '收盘价',
+  ""INCR_PER"" DECIMAL(10,2) DEFAULT NULL COMMENT '复合增长率',
+  ""PE"" DECIMAL(10,2) DEFAULT NULL,
+  ""REC_PEG"" DECIMAL(10,2) DEFAULT NULL COMMENT '滚动PEG',
+  ""TEN_DAY"" DECIMAL(10,2) DEFAULT NULL
+) ENGINE=INNODB DEFAULT CHARSET=LATIN1[*] "; expected "UTF8, UTF8MB4"; SQL statement:
+CREATE TABLE `code_observer` (
+  `stock_name` varchar(18) NOT NULL COMMENT '股票代码名称',
+  `close_price` decimal(10,2) DEFAULT NULL COMMENT '收盘价',
+  `incr_per` decimal(10,2) DEFAULT NULL COMMENT '复合增长率',
+  `pe` decimal(10,2) DEFAULT NULL,
+  `rec_peg` decimal(10,2) DEFAULT NULL COMMENT '滚动PEG',
+  `ten_day` decimal(10,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 [42001-193]
+2018-11-14 15:54:29 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE ""CODE_OBSERVER"" (
+  ""STOCK_NAME"" VARCHAR(18) CHARACTER[*] SET UTF8 NOT NULL COMMENT '股票代码名称',
+  ""CLOSE_PRICE"" DECIMAL(10,2) DEFAULT NULL COMMENT '收盘价',
+  ""INCR_PER"" DECIMAL(10,2) DEFAULT NULL COMMENT '复合增长率',
+  ""PE"" DECIMAL(10,2) DEFAULT NULL,
+  ""REC_PEG"" DECIMAL(10,2) DEFAULT NULL COMMENT '滚动PEG',
+  ""TEN_DAY"" DECIMAL(10,2) DEFAULT NULL,
+  ""INDUSTRY"" VARCHAR(20) CHARACTER SET UTF8 DEFAULT NULL COMMENT '行业',
+  ""DETAIL_INDUSTRY"" VARCHAR(20) CHARACTER SET UTF8 DEFAULT NULL COMMENT '细分行业',
+  ""LAST_CLOSE_PRICE"" DECIMAL(10,2) DEFAULT NULL COMMENT '上周五价格'
+) "; expected "FOR, UNSIGNED, NOT, NULL, AS, DEFAULT, GENERATED, NOT, NULL, AUTO_INCREMENT, BIGSERIAL, SERIAL, IDENTITY, NULL_TO_DEFAULT, SEQUENCE, SELECTIVITY, COMMENT, CONSTRAINT, PRIMARY, UNIQUE, NOT, NULL, CHECK, REFERENCES, ,, )"; SQL statement:
+CREATE TABLE `code_observer` (
+  `stock_name` varchar(18) CHARACTER SET utf8 NOT NULL COMMENT '股票代码名称',
+  `close_price` decimal(10,2) DEFAULT NULL COMMENT '收盘价',
+  `incr_per` decimal(10,2) DEFAULT NULL COMMENT '复合增长率',
+  `pe` decimal(10,2) DEFAULT NULL,
+  `rec_peg` decimal(10,2) DEFAULT NULL COMMENT '滚动PEG',
+  `ten_day` decimal(10,2) DEFAULT NULL,
+  `industry` varchar(20) CHARACTER SET utf8 DEFAULT NULL COMMENT '行业',
+  `detail_industry` varchar(20) CHARACTER SET utf8 DEFAULT NULL COMMENT '细分行业',
+  `last_close_price` decimal(10,2) DEFAULT NULL COMMENT '上周五价格'
+) [42001-193]
+2018-11-14 15:54:32 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE ""CODE_OBSERVER"" (
+  ""STOCK_NAME"" VARCHAR(18) CHARACTER[*] SET UTF8 NOT NULL COMMENT '股票代码名称',
+  ""CLOSE_PRICE"" DECIMAL(10,2) DEFAULT NULL COMMENT '收盘价',
+  ""INCR_PER"" DECIMAL(10,2) DEFAULT NULL COMMENT '复合增长率',
+  ""PE"" DECIMAL(10,2) DEFAULT NULL,
+  ""REC_PEG"" DECIMAL(10,2) DEFAULT NULL COMMENT '滚动PEG',
+  ""TEN_DAY"" DECIMAL(10,2) DEFAULT NULL,
+  ""INDUSTRY"" VARCHAR(20) CHARACTER SET UTF8 DEFAULT NULL COMMENT '行业',
+  ""DETAIL_INDUSTRY"" VARCHAR(20) CHARACTER SET UTF8 DEFAULT NULL COMMENT '细分行业',
+  ""LAST_CLOSE_PRICE"" DECIMAL(10,2) DEFAULT NULL COMMENT '上周五价格'
+)； "; expected "FOR, UNSIGNED, NOT, NULL, AS, DEFAULT, GENERATED, NOT, NULL, AUTO_INCREMENT, BIGSERIAL, SERIAL, IDENTITY, NULL_TO_DEFAULT, SEQUENCE, SELECTIVITY, COMMENT, CONSTRAINT, PRIMARY, UNIQUE, NOT, NULL, CHECK, REFERENCES, ,, )"; SQL statement:
+CREATE TABLE `code_observer` (
+  `stock_name` varchar(18) CHARACTER SET utf8 NOT NULL COMMENT '股票代码名称',
+  `close_price` decimal(10,2) DEFAULT NULL COMMENT '收盘价',
+  `incr_per` decimal(10,2) DEFAULT NULL COMMENT '复合增长率',
+  `pe` decimal(10,2) DEFAULT NULL,
+  `rec_peg` decimal(10,2) DEFAULT NULL COMMENT '滚动PEG',
+  `ten_day` decimal(10,2) DEFAULT NULL,
+  `industry` varchar(20) CHARACTER SET utf8 DEFAULT NULL COMMENT '行业',
+  `detail_industry` varchar(20) CHARACTER SET utf8 DEFAULT NULL COMMENT '细分行业',
+  `last_close_price` decimal(10,2) DEFAULT NULL COMMENT '上周五价格'
+)； [42001-193]
+2018-11-14 15:55:29 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE ""CODE_OBSERVER"" (
+  ""STOCK_NAME"" VARCHAR(18) CHARACTER[*] SET UTF8 NOT NULL COMMENT '股票代码名称',
+  ""CLOSE_PRICE"" DECIMAL(10,2) DEFAULT NULL COMMENT '收盘价',
+  ""INCR_PER"" DECIMAL(10,2) DEFAULT NULL COMMENT '复合增长率',
+  ""PE"" DECIMAL(10,2) DEFAULT NULL,
+  ""REC_PEG"" DECIMAL(10,2) DEFAULT NULL COMMENT '滚动PEG',
+  ""TEN_DAY"" DECIMAL(10,2) DEFAULT NULL,
+  ""INDUSTRY"" VARCHAR(20) CHARACTER SET UTF8 DEFAULT NULL COMMENT '行业',
+  ""DETAIL_INDUSTRY"" VARCHAR(20) CHARACTER SET UTF8 DEFAULT NULL COMMENT '细分行业',
+  ""LAST_CLOSE_PRICE"" DECIMAL(10,2) DEFAULT NULL COMMENT '上周五价格'
+) "; expected "FOR, UNSIGNED, NOT, NULL, AS, DEFAULT, GENERATED, NOT, NULL, AUTO_INCREMENT, BIGSERIAL, SERIAL, IDENTITY, NULL_TO_DEFAULT, SEQUENCE, SELECTIVITY, COMMENT, CONSTRAINT, PRIMARY, UNIQUE, NOT, NULL, CHECK, REFERENCES, ,, )"; SQL statement:
+CREATE TABLE `code_observer` (
+  `stock_name` varchar(18) CHARACTER SET utf8 NOT NULL COMMENT '股票代码名称',
+  `close_price` decimal(10,2) DEFAULT NULL COMMENT '收盘价',
+  `incr_per` decimal(10,2) DEFAULT NULL COMMENT '复合增长率',
+  `pe` decimal(10,2) DEFAULT NULL,
+  `rec_peg` decimal(10,2) DEFAULT NULL COMMENT '滚动PEG',
+  `ten_day` decimal(10,2) DEFAULT NULL,
+  `industry` varchar(20) CHARACTER SET utf8 DEFAULT NULL COMMENT '行业',
+  `detail_industry` varchar(20) CHARACTER SET utf8 DEFAULT NULL COMMENT '细分行业',
+  `last_close_price` decimal(10,2) DEFAULT NULL COMMENT '上周五价格'
+) [42001-193]
+2018-11-14 15:56:19 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE ""CODE_OBSERVER"" (
+  ""STOCK_NAME"" VARCHAR(18) CHARACTER[*] SET UTF8 NOT NULL COMMENT '股票代码名称',
+  ""CLOSE_PRICE"" DECIMAL(10,2) DEFAULT NULL COMMENT '收盘价',
+  ""INCR_PER"" DECIMAL(10,2) DEFAULT NULL COMMENT '复合增长率',
+  ""PE"" DECIMAL(10,2) DEFAULT NULL,
+  ""REC_PEG"" DECIMAL(10,2) DEFAULT NULL COMMENT '滚动PEG',
+  ""TEN_DAY"" DECIMAL(10,2) DEFAULT NULL,
+  ""INDUSTRY"" VARCHAR(20) CHARACTER SET UTF8 DEFAULT NULL COMMENT '行业',
+  ""DETAIL_INDUSTRY"" VARCHAR(20) CHARACTER SET UTF8 DEFAULT NULL COMMENT '细分行业',
+  ""LAST_CLOSE_PRICE"" DECIMAL(10,2) DEFAULT NULL COMMENT '上周五价格'
+) "; expected "FOR, UNSIGNED, NOT, NULL, AS, DEFAULT, GENERATED, NOT, NULL, AUTO_INCREMENT, BIGSERIAL, SERIAL, IDENTITY, NULL_TO_DEFAULT, SEQUENCE, SELECTIVITY, COMMENT, CONSTRAINT, PRIMARY, UNIQUE, NOT, NULL, CHECK, REFERENCES, ,, )"; SQL statement:
+CREATE TABLE `code_observer` (
+  `stock_name` varchar(18) character SET utf8 NOT NULL COMMENT '股票代码名称',
+  `close_price` decimal(10,2) DEFAULT NULL COMMENT '收盘价',
+  `incr_per` decimal(10,2) DEFAULT NULL COMMENT '复合增长率',
+  `pe` decimal(10,2) DEFAULT NULL,
+  `rec_peg` decimal(10,2) DEFAULT NULL COMMENT '滚动PEG',
+  `ten_day` decimal(10,2) DEFAULT NULL,
+  `industry` varchar(20) CHARACTER SET utf8 DEFAULT NULL COMMENT '行业',
+  `detail_industry` varchar(20) CHARACTER SET utf8 DEFAULT NULL COMMENT '细分行业',
+  `last_close_price` decimal(10,2) DEFAULT NULL COMMENT '上周五价格'
+) [42001-193]
+2018-11-14 15:58:08 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Feature not supported: "DEFAULT"; SQL statement:
+CREATE TABLE `code_observer` (
+  `stock_name` varchar(18) NOT NULL COMMENT '股票代码名称',
+  `close_price` decimal(10,2) DEFAULT NULL COMMENT '收盘价',
+  `incr_per` decimal(10,2) DEFAULT NULL COMMENT '复合增长率',
+  `pe` decimal(10,2) DEFAULT NULL,
+  `rec_peg` decimal(10,2) DEFAULT NULL COMMENT '滚动PEG',
+  `ten_day` decimal(10,2) DEFAULT NULL,
+  `industry` varchar(20)  DEFAULT NULL COMMENT '行业',
+  `detail_industry` varchar(20)  DEFAULT NULL COMMENT '细分行业',
+  `last_close_price` decimal(10,2) DEFAULT NULL COMMENT '上周五价格'
+) ENGINE=DEFAULT CHARSET=utf8 [50100-193]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.message.DbException.getUnsupportedException(DbException.java:216)
+	at org.h2.command.Parser.parseCreateTable(Parser.java:6060)
+	at org.h2.command.Parser.parseCreate(Parser.java:4238)
+	at org.h2.command.Parser.parsePrepared(Parser.java:362)
+	at org.h2.command.Parser.parse(Parser.java:317)
+	at org.h2.command.Parser.parse(Parser.java:289)
+	at org.h2.command.Parser.prepareCommand(Parser.java:254)
+	at org.h2.engine.Session.prepareLocal(Session.java:561)
+	at org.h2.engine.Session.prepareCommand(Session.java:502)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1203)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:170)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:158)
+	at org.h2.server.web.WebApp.getResult(WebApp.java:1380)
+	at org.h2.server.web.WebApp.query(WebApp.java:1053)
+	at org.h2.server.web.WebApp.query(WebApp.java:1029)
+	at org.h2.server.web.WebApp.process(WebApp.java:222)
+	at org.h2.server.web.WebApp.processRequest(WebApp.java:169)
+	at org.h2.server.web.WebServlet.doGet(WebServlet.java:125)
+	at org.h2.server.web.WebServlet.doPost(WebServlet.java:162)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:648)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:729)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:230)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.HttpPutFormContentFilter.doFilterInternal(HttpPutFormContentFilter.java:105)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:81)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:197)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:198)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:474)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:140)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:79)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:349)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:783)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:798)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1434)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:745)
+2018-11-14 15:58:13 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Feature not supported: "CHARSET"; SQL statement:
+CREATE TABLE `code_observer` (
+  `stock_name` varchar(18) NOT NULL COMMENT '股票代码名称',
+  `close_price` decimal(10,2) DEFAULT NULL COMMENT '收盘价',
+  `incr_per` decimal(10,2) DEFAULT NULL COMMENT '复合增长率',
+  `pe` decimal(10,2) DEFAULT NULL,
+  `rec_peg` decimal(10,2) DEFAULT NULL COMMENT '滚动PEG',
+  `ten_day` decimal(10,2) DEFAULT NULL,
+  `industry` varchar(20)  DEFAULT NULL COMMENT '行业',
+  `detail_industry` varchar(20)  DEFAULT NULL COMMENT '细分行业',
+  `last_close_price` decimal(10,2) DEFAULT NULL COMMENT '上周五价格'
+) ENGINE=CHARSET=utf8 [50100-193]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.message.DbException.getUnsupportedException(DbException.java:216)
+	at org.h2.command.Parser.parseCreateTable(Parser.java:6060)
+	at org.h2.command.Parser.parseCreate(Parser.java:4238)
+	at org.h2.command.Parser.parsePrepared(Parser.java:362)
+	at org.h2.command.Parser.parse(Parser.java:317)
+	at org.h2.command.Parser.parse(Parser.java:289)
+	at org.h2.command.Parser.prepareCommand(Parser.java:254)
+	at org.h2.engine.Session.prepareLocal(Session.java:561)
+	at org.h2.engine.Session.prepareCommand(Session.java:502)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1203)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:170)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:158)
+	at org.h2.server.web.WebApp.getResult(WebApp.java:1380)
+	at org.h2.server.web.WebApp.query(WebApp.java:1053)
+	at org.h2.server.web.WebApp.query(WebApp.java:1029)
+	at org.h2.server.web.WebApp.process(WebApp.java:222)
+	at org.h2.server.web.WebApp.processRequest(WebApp.java:169)
+	at org.h2.server.web.WebServlet.doGet(WebServlet.java:125)
+	at org.h2.server.web.WebServlet.doPost(WebServlet.java:162)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:648)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:729)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:230)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.HttpPutFormContentFilter.doFilterInternal(HttpPutFormContentFilter.java:105)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:81)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:197)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:198)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:474)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:140)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:79)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:349)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:783)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:798)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1434)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:745)
+2018-11-14 15:59:37 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Schema "STOCK" not found; SQL statement:
+INSERT INTO `stock`.`code_observer` (`stock_name`, `close_price`, `incr_per`, `pe`, `rec_peg`, `ten_day`, `industry`, `detail_industry`, `last_close_price`) VALUES ('老百姓', '54.90', '24.96', '37.15', '1.78', '-0.03', '医疗', '医药商业', '55.70') [90079-193]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.command.Parser.getSchema(Parser.java:679)
+	at org.h2.command.Parser.getSchema(Parser.java:685)
+	at org.h2.command.Parser.readTableOrView(Parser.java:5372)
+	at org.h2.command.Parser.readTableOrView(Parser.java:5366)
+	at org.h2.command.Parser.parseInsert(Parser.java:1053)
+	at org.h2.command.Parser.parsePrepared(Parser.java:413)
+	at org.h2.command.Parser.parse(Parser.java:317)
+	at org.h2.command.Parser.parse(Parser.java:289)
+	at org.h2.command.Parser.prepareCommand(Parser.java:254)
+	at org.h2.engine.Session.prepareLocal(Session.java:561)
+	at org.h2.engine.Session.prepareCommand(Session.java:502)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1203)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:170)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:158)
+	at org.h2.server.web.WebApp.getResult(WebApp.java:1380)
+	at org.h2.server.web.WebApp.query(WebApp.java:1053)
+	at org.h2.server.web.WebApp.query(WebApp.java:1029)
+	at org.h2.server.web.WebApp.process(WebApp.java:222)
+	at org.h2.server.web.WebApp.processRequest(WebApp.java:169)
+	at org.h2.server.web.WebServlet.doGet(WebServlet.java:125)
+	at org.h2.server.web.WebServlet.doPost(WebServlet.java:162)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:648)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:729)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:230)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.HttpPutFormContentFilter.doFilterInternal(HttpPutFormContentFilter.java:105)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:81)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:197)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:198)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:474)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:140)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:79)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:349)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:783)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:798)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1434)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:745)
+2018-11-14 16:28:57 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE ""STOCK"" (
+  ""CODE"" VARCHAR(12) NOT NULL,
+  ""NAME"" VARCHAR(18) DEFAULT '' COMMENT '股票代码名称',
+  ""DT"" DATE NOT NULL,
+  ""WEIGHT"" DOUBLE(2,[*]0) DEFAULT NULL,
+  ""INDEX_CODE"" VARCHAR(8) DEFAULT NULL,
+  ""MARKET"" VARCHAR(6) DEFAULT NULL,
+  ""INDUSTRY"" VARCHAR(60) DEFAULT NULL,
+  ""CONCEPT"" VARCHAR(190) DEFAULT NULL,
+  ""REMARK"" VARCHAR(240) DEFAULT NULL,
+  ""OBSERVER_INDUSTRY"" VARCHAR(12) DEFAULT NULL,
+  ""PRESSURE_POSITION"" DOUBLE DEFAULT NULL,
+  ""SUPPORT_POSITION"" DOUBLE DEFAULT NULL,
+  PRIMARY KEY (""CODE"")
+) "; expected ")"; SQL statement:
+CREATE TABLE `stock` (
+  `code` varchar(12) NOT NULL,
+  `name` varchar(18) DEFAULT '' COMMENT '股票代码名称',
+  `dt` date NOT NULL,
+  `weight` double(2,0) DEFAULT NULL,
+  `index_code` varchar(8) DEFAULT NULL,
+  `market` varchar(6) DEFAULT NULL,
+  `industry` varchar(60) DEFAULT NULL,
+  `concept` varchar(190) DEFAULT NULL,
+  `remark` varchar(240) DEFAULT NULL,
+  `observer_industry` varchar(12) DEFAULT NULL,
+  `pressure_position` double DEFAULT NULL,
+  `support_position` double DEFAULT NULL,
+  PRIMARY KEY (`code`)
+) [42001-193]
+2018-11-14 16:29:30 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE ""STOCK"" (
+  ""CODE"" VARCHAR(12) NOT NULL,
+  ""NAME"" VARCHAR(18) DEFAULT '' COMMENT '股票代码名称',
+  ""DT"" DATE NOT NULL,
+  ""WEIGHT"" DOUBLE(2,[*]0) DEFAULT NULL,
+  ""INDEX_CODE"" VARCHAR(8) DEFAULT NULL,
+  ""MARKET"" VARCHAR(6) DEFAULT NULL,
+  ""INDUSTRY"" VARCHAR(60) DEFAULT NULL,
+  ""CONCEPT"" VARCHAR(190) DEFAULT NULL,
+  ""REMARK"" VARCHAR(240) DEFAULT NULL,
+  ""OBSERVER_INDUSTRY"" VARCHAR(12) DEFAULT NULL,
+  ""PRESSURE_POSITION"" DOUBLE DEFAULT NULL,
+  ""SUPPORT_POSITION"" DOUBLE DEFAULT NULL,
+  PRIMARY KEY (""CODE"")
+) "; expected ")"; SQL statement:
+CREATE TABLE `stock` (
+  `code` varchar(12) NOT NULL,
+  `name` varchar(18) DEFAULT '' COMMENT '股票代码名称',
+  `dt` date NOT NULL,
+  `weight` double(2,0) DEFAULT NULL,
+  `index_code` varchar(8) DEFAULT NULL,
+  `market` varchar(6) DEFAULT NULL,
+  `industry` varchar(60) DEFAULT NULL,
+  `concept` varchar(190) DEFAULT NULL,
+  `remark` varchar(240) DEFAULT NULL,
+  `observer_industry` varchar(12) DEFAULT NULL,
+  `pressure_position` double DEFAULT NULL,
+  `support_position` double DEFAULT NULL,
+  PRIMARY KEY (`code`)
+) [42001-193]
+2018-11-14 16:57:38 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE ""CODE_OBSERVER"" (
+  ""STOCK_NAME"" VARCHAR(18) CHARACTER[*] SET UTF8 NOT NULL COMMENT '股票代码名称',
+  ""CLOSE_PRICE"" DECIMAL(10,2) DEFAULT NULL COMMENT '收盘价',
+  ""INCR_PER"" DECIMAL(10,2) DEFAULT NULL COMMENT '复合增长率',
+  ""PE"" DECIMAL(10,2) DEFAULT NULL,
+  ""REC_PEG"" DECIMAL(10,2) DEFAULT NULL COMMENT '滚动PEG',
+  ""TEN_DAY"" DECIMAL(10,2) DEFAULT NULL,
+  ""INDUSTRY"" VARCHAR(20) CHARACTER SET UTF8 DEFAULT NULL COMMENT '行业',
+  ""DETAIL_INDUSTRY"" VARCHAR(20) CHARACTER SET UTF8 DEFAULT NULL COMMENT '细分行业',
+  ""LAST_CLOSE_PRICE"" DECIMAL(10,2) DEFAULT NULL COMMENT '上周五价格',
+  ""CODE"" VARCHAR(6) DEFAULT NULL,
+  ""MARKET"" VARCHAR(2) DEFAULT NULL
+) "; expected "FOR, UNSIGNED, NOT, NULL, AS, DEFAULT, GENERATED, NOT, NULL, AUTO_INCREMENT, BIGSERIAL, SERIAL, IDENTITY, NULL_TO_DEFAULT, SEQUENCE, SELECTIVITY, COMMENT, CONSTRAINT, PRIMARY, UNIQUE, NOT, NULL, CHECK, REFERENCES, ,, )"; SQL statement:
+CREATE TABLE `code_observer` (
+  `stock_name` varchar(18) CHARACTER SET utf8 NOT NULL COMMENT '股票代码名称',
+  `close_price` decimal(10,2) DEFAULT NULL COMMENT '收盘价',
+  `incr_per` decimal(10,2) DEFAULT NULL COMMENT '复合增长率',
+  `pe` decimal(10,2) DEFAULT NULL,
+  `rec_peg` decimal(10,2) DEFAULT NULL COMMENT '滚动PEG',
+  `ten_day` decimal(10,2) DEFAULT NULL,
+  `industry` varchar(20) CHARACTER SET utf8 DEFAULT NULL COMMENT '行业',
+  `detail_industry` varchar(20) CHARACTER SET utf8 DEFAULT NULL COMMENT '细分行业',
+  `last_close_price` decimal(10,2) DEFAULT NULL COMMENT '上周五价格',
+  `code` varchar(6) DEFAULT NULL,
+  `market` varchar(2) DEFAULT NULL
+) [42001-193]
+2018-11-14 16:57:46 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE ""CODE_OBSERVER"" (
+  ""STOCK_NAME"" VARCHAR(18)  NOT NULL COMMENT '股票代码名称',
+  ""CLOSE_PRICE"" DECIMAL(10,2) DEFAULT NULL COMMENT '收盘价',
+  ""INCR_PER"" DECIMAL(10,2) DEFAULT NULL COMMENT '复合增长率',
+  ""PE"" DECIMAL(10,2) DEFAULT NULL,
+  ""REC_PEG"" DECIMAL(10,2) DEFAULT NULL COMMENT '滚动PEG',
+  ""TEN_DAY"" DECIMAL(10,2) DEFAULT NULL,
+  ""INDUSTRY"" VARCHAR(20) CHARACTER[*] SET UTF8 DEFAULT NULL COMMENT '行业',
+  ""DETAIL_INDUSTRY"" VARCHAR(20) CHARACTER SET UTF8 DEFAULT NULL COMMENT '细分行业',
+  ""LAST_CLOSE_PRICE"" DECIMAL(10,2) DEFAULT NULL COMMENT '上周五价格',
+  ""CODE"" VARCHAR(6) DEFAULT NULL,
+  ""MARKET"" VARCHAR(2) DEFAULT NULL
+) "; expected "FOR, UNSIGNED, NOT, NULL, AS, DEFAULT, GENERATED, NOT, NULL, AUTO_INCREMENT, BIGSERIAL, SERIAL, IDENTITY, NULL_TO_DEFAULT, SEQUENCE, SELECTIVITY, COMMENT, CONSTRAINT, PRIMARY, UNIQUE, NOT, NULL, CHECK, REFERENCES, ,, )"; SQL statement:
+CREATE TABLE `code_observer` (
+  `stock_name` varchar(18)  NOT NULL COMMENT '股票代码名称',
+  `close_price` decimal(10,2) DEFAULT NULL COMMENT '收盘价',
+  `incr_per` decimal(10,2) DEFAULT NULL COMMENT '复合增长率',
+  `pe` decimal(10,2) DEFAULT NULL,
+  `rec_peg` decimal(10,2) DEFAULT NULL COMMENT '滚动PEG',
+  `ten_day` decimal(10,2) DEFAULT NULL,
+  `industry` varchar(20) CHARACTER SET utf8 DEFAULT NULL COMMENT '行业',
+  `detail_industry` varchar(20) CHARACTER SET utf8 DEFAULT NULL COMMENT '细分行业',
+  `last_close_price` decimal(10,2) DEFAULT NULL COMMENT '上周五价格',
+  `code` varchar(6) DEFAULT NULL,
+  `market` varchar(2) DEFAULT NULL
+) [42001-193]
+2018-11-14 16:59:44 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLException: Schema "STOCK" not found; SQL statement:
+INSERT INTO `stock`.`code_observer` (`stock_name`, `close_price`, `incr_per`, `pe`, `rec_peg`, `ten_day`, `industry`, `detail_industry`, `last_close_price`, `code`, `market`) VALUES ('老百姓', '54.90', '24.96', '37.15', '1.78', '-0.03', '医疗', '医药商业', '55.70', '603883', 'sh') [90079-193]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.command.Parser.getSchema(Parser.java:679)
+	at org.h2.command.Parser.getSchema(Parser.java:685)
+	at org.h2.command.Parser.readTableOrView(Parser.java:5372)
+	at org.h2.command.Parser.readTableOrView(Parser.java:5366)
+	at org.h2.command.Parser.parseInsert(Parser.java:1053)
+	at org.h2.command.Parser.parsePrepared(Parser.java:413)
+	at org.h2.command.Parser.parse(Parser.java:317)
+	at org.h2.command.Parser.parse(Parser.java:289)
+	at org.h2.command.Parser.prepareCommand(Parser.java:254)
+	at org.h2.engine.Session.prepareLocal(Session.java:561)
+	at org.h2.engine.Session.prepareCommand(Session.java:502)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1203)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:170)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:158)
+	at org.h2.server.web.WebApp.getResult(WebApp.java:1380)
+	at org.h2.server.web.WebApp.query(WebApp.java:1053)
+	at org.h2.server.web.WebApp.query(WebApp.java:1029)
+	at org.h2.server.web.WebApp.process(WebApp.java:222)
+	at org.h2.server.web.WebApp.processRequest(WebApp.java:169)
+	at org.h2.server.web.WebServlet.doGet(WebServlet.java:125)
+	at org.h2.server.web.WebServlet.doPost(WebServlet.java:162)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:648)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:729)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:230)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.HttpPutFormContentFilter.doFilterInternal(HttpPutFormContentFilter.java:105)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:81)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:197)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:198)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:474)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:140)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:79)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:349)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:783)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:798)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1434)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:745)
+2018-11-14 17:54:05 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLException: Schema "STOCK" not found; SQL statement:
+INSERT INTO `stock`.`code_observer` (`stock_name`, `close_price`, `incr_per`, `pe`, `rec_peg`, `ten_day`, `industry`, `detail_industry`, `last_close_price`, `code`, `market`) VALUES ('老百姓', '54.90', '24.96', '37.15', '1.780', '-0.030', '医疗', '医药商业', '55.70', '603883', 'sh') [90079-193]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.command.Parser.getSchema(Parser.java:679)
+	at org.h2.command.Parser.getSchema(Parser.java:685)
+	at org.h2.command.Parser.readTableOrView(Parser.java:5372)
+	at org.h2.command.Parser.readTableOrView(Parser.java:5366)
+	at org.h2.command.Parser.parseInsert(Parser.java:1053)
+	at org.h2.command.Parser.parsePrepared(Parser.java:413)
+	at org.h2.command.Parser.parse(Parser.java:317)
+	at org.h2.command.Parser.parse(Parser.java:289)
+	at org.h2.command.Parser.prepareCommand(Parser.java:254)
+	at org.h2.engine.Session.prepareLocal(Session.java:561)
+	at org.h2.engine.Session.prepareCommand(Session.java:502)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1203)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:170)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:158)
+	at org.h2.server.web.WebApp.getResult(WebApp.java:1380)
+	at org.h2.server.web.WebApp.query(WebApp.java:1053)
+	at org.h2.server.web.WebApp.query(WebApp.java:1029)
+	at org.h2.server.web.WebApp.process(WebApp.java:222)
+	at org.h2.server.web.WebApp.processRequest(WebApp.java:169)
+	at org.h2.server.web.WebServlet.doGet(WebServlet.java:125)
+	at org.h2.server.web.WebServlet.doPost(WebServlet.java:162)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:648)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:729)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:230)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.HttpPutFormContentFilter.doFilterInternal(HttpPutFormContentFilter.java:105)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:81)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:197)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:198)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:474)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:140)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:79)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:349)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:783)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:798)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1434)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:745)

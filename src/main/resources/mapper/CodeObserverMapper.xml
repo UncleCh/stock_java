@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.it.repository.h2.CodeObserverMapper">
+
+    <resultMap id="CodeObserver" type="com.it.bean.CodeObserver"/>
+
+    <select id="getCodeObserverList" resultMap="CodeObserver">
+        SELECT * FROM code_observer
+        <where>
+            <if test="industry !=null">
+                industry=#{industry}
+            </if>
+        </where>
+    </select>
+
+
+    <update id="updateCodeObserver">
+        UPDATE code_observer
+        <set>
+            <if test="closePrice !=null">
+                close_price=#{closePrice},
+            </if>
+            <if test="closePrice !=null">
+                incr_per=#{incrPer},
+            </if>
+            <if test="closePrice !=null">
+                pe=#{pe},
+            </if>
+            <if test="closePrice !=null">
+                rec_peg=#{recPeg},
+            </if>
+            <if test="closePrice !=null">
+                ten_day=#{tenDay},
+            </if>
+            <if test="closePrice !=null">
+                industry=#{industry},
+            </if>
+
+        </set>
+
+    </update>
+
+
+</mapper>

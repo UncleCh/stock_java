@@ -40,7 +40,7 @@ public class FastService {
 //        for (Stock temp : stockList) {
 //            stockService.collectHistory(temp);
 //        }
-//        stockService.collectStock(stockList);
+        stockService.collectStock(stockList);
         trendOccurModel.analysis(industry);
 //        for (Stock temp : stockList) {
 //            List<Daily> dailyList = dailyMapper.getDailyList(temp.getCode(), null, null);
