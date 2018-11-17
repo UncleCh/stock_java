@@ -1,39 +1,137 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8" />
-    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
-    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
-    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-    <title>Hello World</title>
-    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
-
+    <meta charset="UTF-8"/>
+    <title>行业跟踪展示页面</title>
+    <link href="lib/table2/css/table2.css" rel="stylesheet">
+    <script src="lib/jquery-1.12.4.js"></script>
+    <script src="lib/layui/layui.js"></script>
 </head>
 <body>
-<div class="page-header">
-    <h1>行情记录 <small>持续记录</small></h1>
+<div>
+    <select id="industry">
+        <option value="医疗">医疗</option>
+        <option value="saab">农业</option>
+    </select>
 </div>
-<div class="panel panel-default">
-
-    <div class="panel-heading">Panel heading</div>
-
-
-</div>
-<div id="app">
-    <p>{{ message }}</p>
-</div>
+<table id="showTable"></table>
 
 <script>
-    new Vue({
-        el: '#app',
-        data: {
-            message: 'Hello Vue.js!'
+
+    layui.config({
+        base: 'lib/table2/'
+    }).use(['table2', "table2"], function () {
+
+        $("#industry").change(function () {
+            initData($('#industry').val());
+        });
+
+
+        function initData(industry) {
+            $.ajax({
+                type: "POST",
+                url: "/rest/query",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({
+                    "industry": industry
+                }),
+                dataType: "json",
+                success: function (message) {
+                    $("#showTable").empty();
+                    initTable13(message);
+                },
+                error: function (message) {
+                    console.info(message)
+                }
+            });
         }
-    })
+
+        function updateData(obj) {
+            $.ajax({
+                type: "POST",
+                url: "/rest/update",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(obj),
+                dataType: "json",
+                success: function (message) {
+
+                },
+                error: function (message) {
+                    console.info(message)
+                }
+            });
+        }
+
+        initData("");
+
+
+        var table = layui.table2;
+
+
+        function initTable13(tmpdata) {
+
+            var tableIns = table.render({
+                elem: "#showTable",
+                data: tmpdata,
+                expandRow: true,
+                cols: [
+                    [
+                        {title: $('#industry').val() + '行业 重点公司跟踪', colspan: 7}
+                    ],
+                    [
+                        {field: 'stockName', title: '股票名称', align: 'center', width: 100},
+                        {
+                            field: 'closePrice',
+                            title: '价格',
+                            width: 100,
+                            align: 'center',
+                            sort: true,
+                            resize: true
+                            /*  dataType: 'html'*/
+                        },
+                        {field: 'incrPer', title: '复合增长率', width: 120, align: 'center', resize: true},
+                        {field: 'pe', title: 'PE', width: 100, align: 'center', resize: true},
+                        {field: 'recPeg', title: '滚动PEG', align: 'center', width: 120},
+                        {field: 'tenDay', title: '10日', align: 'center', width: 100},
+                        {field: 'detailIndustry', title: '细分行业', align: 'center', width: 100},
+                        {
+                            field: 'opts',
+                            title: '操作',
+                            width: 100,
+                            resize: true,
+                            formatter: function () {
+                                return '<a class="rayui-btn rayui-btn-success" event="edit">编辑</a>';
+                            }
+                        }
+                    ]]
+            });
+            tableIns.on("tool", function (evt, obj) {
+                if (evt === "del") {
+                    if (window.confirm("确定删除[" + obj.data.Name + "]吗？")) {
+                        $.getJSON("data.ashx?action=DeleteData", {id: obj.data.Id}, function (data) {
+                            if (data.ret === 0)
+                                obj.del();
+                            else
+                                alert("删除失败");
+                        });
+                    }
+                } else if (evt === "edit") {
+                    var name = window.prompt("请输入姓名", obj.data.Name);
+                    if (name.length >= 1) {
+                        obj.data.closePrice = name;
+                        obj.update();
+                        updateData(obj.data)
+                    }
+                }
+            });
+
+
+        }
+
+
+    });
+
+
 </script>
 
 </body>

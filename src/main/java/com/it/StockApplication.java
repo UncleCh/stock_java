@@ -48,7 +48,7 @@ public class StockApplication implements CommandLineRunner {
 
 
     public void run(String... strings) throws Exception {
-        codeObserverService.updateData();
+//        codeObserverService.updateData();
 //        fastService.analysis();
     }
 

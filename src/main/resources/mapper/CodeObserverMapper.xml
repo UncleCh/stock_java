@@ -8,7 +8,7 @@
     <select id="getCodeObserverList" resultMap="CodeObserver">
         SELECT * FROM code_observer
         <where>
-            <if test="industry !=null">
+            <if test="industry !=null and industry !=''">
                 industry=#{industry}
             </if>
         </where>
@@ -38,6 +38,7 @@
             </if>
 
         </set>
+        where CODE = #{code}
 
     </update>
 
