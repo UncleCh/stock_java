@@ -11,7 +11,7 @@
 <div>
     <select id="industry">
         <option value="医疗">医疗</option>
-        <option value="saab">农业</option>
+        <option value="农业">农业</option>
     </select>
 </div>
 <table id="showTable"></table>
@@ -21,7 +21,7 @@
     layui.config({
         base: 'lib/table2/'
     }).use(['table2', "table2"], function () {
-
+        var tableIns;
         $("#industry").change(function () {
             initData($('#industry').val());
         });
@@ -38,6 +38,8 @@
                 dataType: "json",
                 success: function (message) {
                     $("#showTable").empty();
+                   if(tableIns)
+                       $(".laytable-box").remove();
                     initTable13(message);
                 },
                 error: function (message) {
@@ -70,7 +72,7 @@
 
         function initTable13(tmpdata) {
 
-            var tableIns = table.render({
+            tableIns = table.render({
                 elem: "#showTable",
                 data: tmpdata,
                 expandRow: true,

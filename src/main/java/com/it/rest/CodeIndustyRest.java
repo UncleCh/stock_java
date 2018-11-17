@@ -16,12 +16,13 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping("/rest")
 public class CodeIndustyRest {
+
     // INSERT INTO `code_observer` (`stock_name`, `close_price`, `incr_per`, `pe`, `rec_peg`, `ten_day`, `industry`, `detail_industry`, `last_close_price`, `code`, `market`)
-    // VALUES ('复星医药', '54.90', '17.04', '37.15', '1.780', '-0.030', '医疗', '生物药', '55.70', '600196', 'sh');
+    // VALUES ('牧原股份', '54.90', '17.04', '37.15', '1.780', '-0.030', '农业', '养殖', '55.70', '002714', 'sz');
 
 
 
-// 牧原股份 温氏股份 天邦股份
+//
 
     @Autowired
     CodeObserverMapper codeObserverMapper;
